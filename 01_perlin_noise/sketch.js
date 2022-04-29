@@ -1,4 +1,9 @@
-/// <reference path="./../p5.global-mode.d.ts" />
+/**
+ * @title Task 1: 2D Pelin Noise generator (p5.js)
+ * @authors cat & ggJayBizzle
+ * @group CJdesign
+ * @instution BHT Berlin
+ */
 
 // global values
 var inc = 0.009 // set incremental step size
@@ -23,7 +28,7 @@ function setup() {
 
   createCanvas(canvaWidth, canvaHeight);
   pixelDensity(1); // for HiDPI Displays
-  
+
   // set up GUI
   let guiX = createGui('Offset X');
   let guiY = createGui('Offset Y');
@@ -68,6 +73,7 @@ function setup() {
 function drawPattern() {
   loadPixels();
   const yoff = { ...global_yoff };
+  
   for (let x = 0; x < width; x++) {
     // reset xoff for every x-row in p-array
     const xoff = { ...global_xoff };
@@ -83,7 +89,7 @@ function drawPattern() {
       pixels[index + 3] = a;
       for (let val in xoff) { xoff[val] += inc }
     }
-    for (let val in yoff) { yoff[val] += inc }
+    for (let val in yoff) { yoff[val] += inc } 
   }
   updatePixels();
 }
