@@ -33,7 +33,7 @@
 
     show() {
         stroke(this.color);
-        strokeWeight(1);
+        strokeWeight(4);
         line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
         this.updatePrev();
     } 
@@ -44,21 +44,23 @@
     }
 
     edges() {
-        if (this.pos.x > width) {
-            this.pos.x = 0;
+        if (this.pos.x > width || this.pos.x < 0) {
+            //this.pos.x = 0;
+            this.vel = createVector(this.vel.x * -1, this.vel.y);
             this.updatePrev();
         }
-        if (this.pos.x < 0) {
-            this.pos.x = width;
+        // if (this.pos.x < 0) {
+        //     this.pos.x = width;
+        //     this.updatePrev();
+        // }
+        if (this.pos.y > width || this.pos.y < 0) {
+            // this.pos.y = 0;
+            this.vel = createVector(this.vel.x, this.vel.y * -1);
             this.updatePrev();
         }
-        if (this.pos.y > height) {
-            this.pos.y = 0;
-            this.updatePrev();
-        }
-        if (this.pos.y < 0) {
-            this.pos.y = height;
-            this.updatePrev();
-        }
+        // if (this.pos.y < 0) {
+        //     this.pos.y = height;
+        //     this.updatePrev();
+        // }
     }
  }
