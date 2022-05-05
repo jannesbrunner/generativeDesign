@@ -1,3 +1,10 @@
+/**
+ * @title Task 2: Spring Visualization (p5.js)
+ * @class Class representing a particle for visualization
+ * @authors cat & ggJayBizzle
+ * @group CJdesign
+ * @instution BHT Berlin
+ */ 
  class Particle {
 
     constructor(posX = random(width), posY = random(height)) {
@@ -33,7 +40,7 @@
 
     show() {
         stroke(this.color);
-        strokeWeight(4);
+        strokeWeight(2);
         line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
         this.updatePrev();
     } 

@@ -1,4 +1,4 @@
-
+/// <reference path="./../p5.global-mode.d.ts" />
 /**
  * @title Task 2: Spring Visualization (p5.js)
  * @authors cat & ggJayBizzle
@@ -8,15 +8,20 @@
 
 var gui;
 
-// Global Variables
-var canvaWidth = 800;
-var canvaHeight = 800;
+// Global Variables //
+var canvaWidth = 400;
+var canvaHeight = 400;
 
-var flowfieldWidth = 400;
-var flowfieldHeight = 400;
+var flowfieldWidth = 200;
+var flowfieldHeight = 200;
 
+// settings
 var showFlowField = false;
+var paintMode = false;
 
+// screen buffers
+var ffb; //flow field buffer
+var ptb; //particle buffer
 
 // Parameters
 var inc = 0.1;
@@ -29,13 +34,33 @@ var particles = [];
 var flowfield;
 
 
+function guiSetup() {
+  gui = new Gui();
+  gui.panel.addButton("Toggle FlowField", () => {
+    showFlowField = !showFlowField;
+  }); 
+  gui.panel.addButton("Toogle PaintMode", () => {
+    paintMode = !paintMode;
+  });
+  gui.panel.addRange("inc", 0.01, 1, "", 0.01, (val) => {
+    inc = val;
+  });
+  gui.panel.addRange("zinc", 0.01, 1, "", 0.01, (val) => {
+    zinc = val;
+  });
+}
+
 function setup() {
     createCanvas(canvaWidth, canvaHeight);
     pixelDensity(2);
+    guiSetup();
 
-    gui = new Gui();
-    cols = floor(width / scl);
-    rows = floor(height / scl);
+    ffb = createGraphics(canvaWidth, canvaHeight);
+    ptb = createGraphics(canvaWidth, canvaHeight);
+    
+    
+    cols = floor(canvaWidth / scl);
+    rows = floor(canvaHeight / scl);
     innerCols = floor(flowfieldWidth/scl)
     innerRows = floor(flowfieldHeight/scl)
     fr = createP('');
@@ -44,14 +69,15 @@ function setup() {
 
     for (let index = 0; index < 500; index++) {
         particles[index] = new Particle();
-    }
+    } 
     
-    
+    background(255);
     
 }
   
   function draw() {
-    background(255);
+    
+    if (!paintMode) background(255);
     var yoff = 0;
     for(let y = 0; y < rows; y++) {
       var xoff = 0;
@@ -74,8 +100,12 @@ function setup() {
         v.setMag(0.2);
         flowfield[index] = v;
         xoff += inc;
-        stroke(0, 50);
-        if(showFlowField) drawFlowField(x, y, v);
+        
+        
+        if(showFlowField) {  
+          drawFlowField(x, y, v);
+        }
+        image(ptb, 0,0);
       }
       yoff += inc;
     }
@@ -90,11 +120,16 @@ function setup() {
     });
   }
 
+  function drawInner() {
+    
+  }
+
   function drawFlowField(x, y, v) {
+        stroke("red");
         push();
         translate(x * scl, y * scl);
         rotate(v.heading());
         strokeWeight(1);
         line(0, 0, scl, 0);
-        pop();
+        pop();    
   }

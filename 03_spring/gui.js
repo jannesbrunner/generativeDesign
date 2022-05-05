@@ -1,13 +1,20 @@
 class Gui {
     
+    elements = [];
+    buttons = [];
+    panel;
     
     constructor() {
-        this.parameters = createGui('Parameters')
+        this.panel = QuickSettings.create(canvaWidth, 20, "Settings");
         this.updateGuiPositions();
     }
 
+    get panel() {
+        return this.panel;
+    }
+
     updateGuiPositions() {
-        this.parameters.setPosition(canvaWidth + 20, 10);
+        
     }
 }
 
