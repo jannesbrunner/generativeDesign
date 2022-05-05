@@ -23,8 +23,10 @@ var innerFieldHeight = 200;
 
 // settings
 var showFlowField = false;
-var paintMode = false;
+var paintMode = true;
 var isPlaying = true;
+var fps = 60;
+
 
 // screen buffers
 var ffb; //flow field buffer
@@ -37,10 +39,12 @@ var inc = 0.1;
 var zinc = 0.01;
 var scl = 20;
 var cols, rows, innerCols, innerRows;
-var zoff = 0; 
+var zoff = 0;
 var fr;
 var particles = [];
 var flowfield;
+const beemax = 100;
+var beecount = 10;
 
 // Pictures
 var blossom1;
@@ -49,13 +53,16 @@ function guiSetup() {
   gui = new Gui();
   gui.panel.addButton("Toggle FlowField", () => {
     showFlowField = !showFlowField;
-  }); 
+  });
   gui.panel.addButton("Toogle PaintMode", () => {
     paintMode = !paintMode;
   });
-  gui.panel.addButton( "Play/Pause" , () => {
+  gui.panel.addButton("Play/Pause", () => {
     isPlaying = !isPlaying;
-    isPlaying? loop():noLoop();
+    isPlaying ? loop() : noLoop();
+  });
+  gui.panel.addRange("Bees!", 0, beemax, beecount, 1, (val) => {
+    beecount = val;
   });
   gui.panel.addRange("inc", 0.001, 1, inc, 0.001, (val) => {
     inc = val;
@@ -63,128 +70,126 @@ function guiSetup() {
   gui.panel.addRange("zinc", 0.0001, 0.5, zinc, 0.001, (val) => {
     zinc = val;
   });
+  gui.panel.addRange("FPS", 1, 60, fps, 1, (val) => {
+    fps = val;
+  });
 }
 
 function preload() {
   blossom1 = loadImage('images/flower1.png');
-  bee = loadImage('images/bee.png');
+  beeR = loadImage('images/beeR.png');
+  beeL = loadImage('images/beeL.png');
+  grass = loadImage('images/grass.jpeg');
 }
 
 function setup() {
-    createCanvas(canvaWidth, canvaHeight);
-    pixelDensity(2);
-    guiSetup();
+  createCanvas(canvaWidth, canvaHeight);
+  pixelDensity(2);
+  guiSetup();
 
-    ffb = createGraphics(canvaWidth, canvaHeight);
-    ptb = createGraphics(canvaWidth, canvaHeight);
-    icb = createGraphics(innerFieldWidth, innerFieldHeight);
-    bmb = createGraphics(canvaWidth, canvaHeight);
-    
-    
-    cols = floor(canvaWidth / scl);
-    rows = floor(canvaHeight / scl);
-    innerCols = floor(flowfieldWidth/scl)
-    innerRows = floor(flowfieldHeight/scl)
-    fr = createP('');
-    flowfield = new Array(cols * rows);
-    for (let index = 0; index < 500; index++) {
-        particles[index] = new Particle();
-    } 
-    background(255);
- 
-    
-    
+  ffb = createGraphics(canvaWidth, canvaHeight);
+  ptb = createGraphics(canvaWidth, canvaHeight);
+  icb = createGraphics(innerFieldWidth, innerFieldHeight);
+  bmb = createGraphics(canvaWidth, canvaHeight);
+
+  cols = floor(canvaWidth / scl);
+  rows = floor(canvaHeight / scl);
+  innerCols = floor(flowfieldWidth / scl)
+  innerRows = floor(flowfieldHeight / scl)
+  fr = createP('');
+  flowfield = new Array(cols * rows);
+  for (let index = 0; index < beemax; index++) {
+    particles[index] = new Particle(index);
+  }
+  background(255);
 }
-  
-  function draw() {
-    bmb.image(bee, mouseX, mouseY, 20, 20);
-    image(bmb, 0, 0);
-    bmb.clear();
-    drawInner();
-    drawOuterFlowers();
-    
-    
-    
 
-  
-    if (paintMode) background(255);
-    for(let y = 0; y < rows; y++) {
-      for(let x = 0; x < cols; x++) {
-        let index = x + y * cols;
-        let v0 = createVector(cols/2, 0);
-        let v1 = createVector(x - cols/2, y - rows/2);
-        let angle = v0.angleBetween(v1);
+function draw() {
+  frameRate(fps);
+  if (paintMode) background(255);
+  bmb.image(beeR, mouseX, mouseY, 20, 20);
+  image(bmb, 0, 0);
+  bmb.clear();
+  drawInner();
+  drawOuterFlowers();
 
-        if (!inInnerFiled(x, y)){
-          angle += noise(x * inc, y * inc, zoff) * TWO_PI + PI/2;
-        }
-        
-        var v = p5.Vector.fromAngle(angle);
-        v.setMag(0.4);
-        flowfield[index] = v;
-        if(showFlowField) {  
-          drawFlowField(x, y, v);
-        }
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      let index = x + y * cols;
+      let v0 = createVector(cols / 2, 0);
+      let v1 = createVector(x - cols / 2, y - rows / 2);
+      let angle = v0.angleBetween(v1);
 
+      if (!inInnerFiled(x, y)) {
+        nangle = noise(x * inc, y * inc, zoff) * TWO_PI
+        angle = angle + nangle + PI / 2
+        //angle += noise(x * inc, y * inc, zoff) * TWO_PI + PI/2;
+      }
+
+      var v = p5.Vector.fromAngle(angle);
+      v.setMag(0.4);
+      flowfield[index] = v;
+      if (showFlowField) {
+        drawFlowField(x, y, v);
       }
     }
-    zoff += zinc;
-    fr.html(floor(frameRate()));
-
-    particles.forEach(particle => {
-      particle.follow(flowfield)
-      particle.update();
-      particle.edges();
-      particle.show();  
-    });
-
-   
-
   }
+  zoff += zinc;
+  fr.html(floor(frameRate()));
 
-  function drawInner() {
-    icb.background(255,0);
-    icb.textFont("Comic Sans MS");
-    icb.textSize(40);
-    icb.fill(128 + sin(frameCount*0.1) * 128, 60);
-    icb.text('Spring', innerFieldWidth / 4, innerFieldHeight / 2);
-    image(icb, innerFieldWidth / 2 , innerFieldHeight / 2);
-    icb.clear();
-  }
+  for (var i = 0; i < beecount; i++) {
+    particle = particles[i];
+    particle.follow(flowfield)
+    particle.update();
+    particle.edges();
+    particle.show();
+  };
 
-  function drawOuterFlowers() {
-    // X row top
-    image(blossom1, 20, 20, 50, 50);
-    image(blossom1, 120, 25, 50, 50);
-    image(blossom1, 230, 15, 50, 50);
-    image(blossom1, 330, 15, 50, 50);
+}
 
-    // Y row left
-    image(blossom1, 15, 120, 50, 50);
-    image(blossom1, 25, 230, 50, 50);
+function drawInner() {
+  icb.background(255, 0);
+  icb.textFont("Comic Sans MS");
+  icb.textSize(40);
+  icb.fill(128 + sin(frameCount * 0.1) * 128, 60);
+  icb.text('Spring', innerFieldWidth / 4, innerFieldHeight / 2);
+  image(icb, innerFieldWidth / 2, innerFieldHeight / 2);
+  icb.clear();
+}
 
-    // Y row right
-    image(blossom1, 330, 120, 50, 50);
-    image(blossom1, 315, 230, 50, 50);
+function drawOuterFlowers() {
+  // X row top
+  image(blossom1, sin(frameCount/12) + 20, cos(frameCount/12) + 20, 50, 50);
+  image(blossom1, cos(frameCount/10) + 120, sin(frameCount/12) + 25, 50, 50);
+  image(blossom1, sin(frameCount/17) + 230, cos(frameCount/11) + 15, 50, 50);
+  image(blossom1, sin(frameCount/10) + 330, cos(frameCount/18) + 15, 50, 50);
 
-    // X row bottom
-    image(blossom1, 15, 335, 50, 50);
-    image(blossom1, 125, 330, 50, 50);
-    image(blossom1, 235, 320, 50, 50); 
-    image(blossom1, 300, 330, 50, 50);
-  }
+  // Y row left
+  image(blossom1, 15, 120, 50, 50);
+  image(blossom1, 25, 230, 50, 50);
 
-  function drawFlowField(x, y, v) {
-        stroke("red");
-        push();
-        translate(x * scl, y * scl);
-        rotate(v.heading());
-        strokeWeight(1);
-        line(0, 0, scl, 0);
-        pop();    
-  }
+  // Y row right
+  image(blossom1, 330, 120, 50, 50);
+  image(blossom1, 315, 230, 50, 50);
 
-function inInnerFiled(x, y){
-  return (( innerFieldXoff/scl) < x && x < (innerFieldXoff/scl + innerFieldWidth/scl)) &&
-         (innerFieldYoff/scl < y && y < (innerFieldYoff/scl + innerFieldHeight/scl))
+  // X row bottom
+  image(blossom1, 15, 335, 50, 50);
+  image(blossom1, 125, 330, 50, 50);
+  image(blossom1, 235, 320, 50, 50);
+  image(blossom1, 300, 330, 50, 50);
+}
+
+function drawFlowField(x, y, v) {
+  stroke("red");
+  push();
+  translate(x * scl, y * scl);
+  rotate(v.heading());
+  strokeWeight(1);
+  line(0, 0, scl, 0);
+  pop();
+}
+
+function inInnerFiled(x, y) {
+  return ((innerFieldXoff / scl) < x && x < (innerFieldXoff / scl + innerFieldWidth / scl)) &&
+    (innerFieldYoff / scl < y && y < (innerFieldYoff / scl + innerFieldHeight / scl))
 }

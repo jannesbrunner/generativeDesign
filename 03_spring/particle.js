@@ -7,13 +7,18 @@
  */ 
  class Particle {
 
-    constructor(posX = random(width), posY = random(height)) {
+    constructor(id, posX = random(width), posY = random(height)) {
+        this.id = id;
         this.pos = createVector(posX,posY);
         this.vel = createVector(0,0);
         this.acc = createVector(0,0);
         this.maxspeed = 4;
         this.color = color(random(0,255), random(0,255), random(0,255), 20);
         this.prevPos = this.pos.copy();
+    }
+
+    get getPos() {
+        return `ID: ${this.id}. X: ${this.pos.x} Y: ${this.pos.y}`
     }
 
     update() {
@@ -29,7 +34,7 @@
     applyForce(force) {
         this.acc.add(force)
     }
-
+    
     follow(vectors) {
         let x = floor(this.pos.x / scl);
         let y = floor(this.pos.y / scl);
@@ -39,9 +44,17 @@
     }
 
     show() {
-        stroke(this.color);
+        //push();
+        if (this.vel.x > 0){
+            image(beeR, this.pos.x, this.pos.y, 25, 25);
+            
+        }else{
+            image(beeL, this.pos.x, this.pos.y, 25, 25);
+        }
+        //pop();
+        /* stroke(this.color);
         strokeWeight(2);
-        line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
+        line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y); */
         this.updatePrev();
     } 
 
@@ -51,23 +64,23 @@
     }
 
     edges() {
-        if (this.pos.x > width || this.pos.x < 0) {
-            //this.pos.x = 0;
-            this.vel = createVector(this.vel.x * -1, this.vel.y);
+        if (this.pos.x > width) {
+            this.pos.x = 0;
+            // this.vel = createVector(this.vel.x * -1, this.vel.y);
             this.updatePrev();
         }
-        // if (this.pos.x < 0) {
-        //     this.pos.x = width;
-        //     this.updatePrev();
-        // }
-        if (this.pos.y > width || this.pos.y < 0) {
-            // this.pos.y = 0;
-            this.vel = createVector(this.vel.x, this.vel.y * -1);
+        if (this.pos.x < 0) {
+            this.pos.x = width;
             this.updatePrev();
         }
-        // if (this.pos.y < 0) {
-        //     this.pos.y = height;
-        //     this.updatePrev();
-        // }
+        if (this.pos.y > width) {
+            this.pos.y = 0;
+            // this.vel = createVector(this.vel.x, this.vel.y * -1);
+            this.updatePrev();
+        }
+        if (this.pos.y < 0) {
+            this.pos.y = height;
+            this.updatePrev();
+        }
     }
  }
