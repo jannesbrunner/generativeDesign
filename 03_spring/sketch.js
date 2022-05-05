@@ -110,6 +110,7 @@ function draw() {
   bmb.image(beeR, mouseX, mouseY, 20, 20);
   image(bmb, 0, 0);
   bmb.clear();
+  image(grass, 0, 0, canvaWidth, canvaHeight);
   drawInner();
   drawOuterFlowers();
 
@@ -127,7 +128,8 @@ function draw() {
       }
 
       var v = p5.Vector.fromAngle(angle);
-      v.setMag(0.4);
+      v.setMag(noise(y)/2);
+      // v.setMag(0.4);
       flowfield[index] = v;
       if (showFlowField) {
         drawFlowField(x, y, v);
@@ -165,18 +167,18 @@ function drawOuterFlowers() {
   image(blossom1, sin(frameCount/10) + 330, cos(frameCount/18) + 15, 50, 50);
 
   // Y row left
-  image(blossom1, 15, 120, 50, 50);
-  image(blossom1, 25, 230, 50, 50);
+  image(blossom1, sin(frameCount/15) + 15, cos(frameCount/14) + 120, 50, 50);
+  image(blossom1, cos(frameCount/12) + 25, sin(frameCount/13) + 230, 50, 50);
 
   // Y row right
-  image(blossom1, 330, 120, 50, 50);
-  image(blossom1, 315, 230, 50, 50);
+  image(blossom1, sin(frameCount/17) + 330, cos(frameCount/14) + 120, 50, 50);
+  image(blossom1, cos(frameCount/13) + 315, sin(frameCount/12) + 230, 50, 50);
 
   // X row bottom
-  image(blossom1, 15, 335, 50, 50);
-  image(blossom1, 125, 330, 50, 50);
-  image(blossom1, 235, 320, 50, 50);
-  image(blossom1, 300, 330, 50, 50);
+  image(blossom1, sin(frameCount/15) +  cos(frameCount/14) + 15, 335, 50, 50);
+  image(blossom1, cos(frameCount/12)+ 125, cos(frameCount/10) + 330, 50, 50);
+  image(blossom1,  cos(frameCount/14) + 235, sin(frameCount/15) + 320, 50, 50);
+  image(blossom1, sin(frameCount/16) + 300, cos(frameCount/10) + 330, 50, 50);
 }
 
 function drawFlowField(x, y, v) {

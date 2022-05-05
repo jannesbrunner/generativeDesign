@@ -28,11 +28,12 @@
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.vel.limit(this.maxspeed);
-        this.acc.mult(0);
+        // this.acc.mult(0);
     }
 
     applyForce(force) {
-        this.acc.add(force)
+        //this.acc.add(force)
+        this.acc = force;
     }
     
     follow(vectors) {
