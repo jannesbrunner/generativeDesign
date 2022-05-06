@@ -101,6 +101,7 @@ function setup() {
     return array;
   }
   flowers = shuffleArray(flowers);
+  noCursor();
 
 }
 
@@ -143,7 +144,12 @@ function draw() {
     particle.edges();
     particle.show();
   };
-  image(beeR, mouseX, mouseY, 20, 20); // let people water plants
+
+  
+image(wateringCan, mouseX, mouseY, 60, 60); // let people water plants
+
+ 
+ 
 }
 
 
