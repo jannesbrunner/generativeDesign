@@ -5,6 +5,7 @@
  * @group CJdesign
  * @instution BHT Berlin
  */
+"use strict";
 
 var gui;
 
@@ -40,7 +41,7 @@ var beeCount = 10; // current particles
 
 // Pictures //
 var flowers = [];
-var beeR, BeeL, popBackground, popKaboom
+var beeR, beeL, popBackground, popKaboom, wateringCan, heading;
 
 
 
@@ -54,6 +55,7 @@ function preload() {
   beeL = loadImage('images/beeL.png');
   popBackground = loadImage('images/Background.png');
   popKaboom = loadImage('images/kaboom.png');
+  wateringCan = loadImage('images/Watering_Can.png');
 }
 
 function guiSetup() {
@@ -117,7 +119,7 @@ function draw() {
       let angle = v0.angleBetween(v1);
 
       if (!inInnerFiled(x, y)) {
-        nangle = noise(x * inc, y * inc, zoff) * TWO_PI
+        let nangle = noise(x * inc, y * inc, zoff) * TWO_PI
         angle = angle + nangle + PI / 2
         //angle += noise(x * inc, y * inc, zoff) * TWO_PI + PI/2;
       }
@@ -135,7 +137,7 @@ function draw() {
   fr.html(floor(frameRate()));
 
   for (var i = 0; i < beeCount; i++) {
-    particle = particles[i];
+    let particle = particles[i];
     particle.follow(flowfield)
     particle.update();
     particle.edges();
