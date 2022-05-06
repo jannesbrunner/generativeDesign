@@ -39,14 +39,12 @@ const beeMax = 100; // max particles
 var beeCount = 10; // current particles
 
 // Pictures //
-var blossom1;
 var flowers = [];
 var beeR, BeeL, popBackground, popKaboom
 
 
 
 function preload() { 
-  blossom1 = loadImage('images/flower1.png');
   flowers.push(loadImage('images/Flower_Blue.png'));
   flowers.push(loadImage('images/Flower_Green.png'));
   flowers.push(loadImage('images/Flower_Pink.png'));
