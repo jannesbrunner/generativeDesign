@@ -50,11 +50,21 @@ function setup() {
   pixelDensity(2);
   guiSetup();
   background(51);
-  textFont(font);
-  textSize(192);
-  fill(255);
-  noStroke();
-  text('CJDesign', canvasWidth/4, canvasHeight/2);
+  // textFont(font);
+  // textSize(192);
+  // fill(255);
+  // noStroke();
+  //text('CJDesign', canvasWidth/4, canvasHeight/2);
+
+  var points = font.textToPoints('CJDesign', canvasWidth/4, canvasHeight/2, 192);
+
+  points.forEach((fontPoint) => {
+    stroke(255,255,255);
+    strokeWeight(8);
+    point(fontPoint.x, fontPoint.y);
+
+  })
+
   
   fr = createP('');
 }
