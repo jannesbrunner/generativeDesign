@@ -36,6 +36,8 @@ var bgColor;
 var vColor;
 var vRadius = 6;
 var powerMouse = false;
+var maxSpeed = 10;
+var maxForce = 0.8;
 
 // Parameters //
 var fr; // current frame rate
@@ -91,6 +93,17 @@ function guiSetup() {
       v.radius = val;
     });
   })
+  gui.panel.addRange("Max Speed", 0, 20, maxSpeed, 1, (val) => {
+    vehicles.forEach(v => {
+      v.maxSpeed = val;
+    });
+  })
+  gui.panel.addRange("Max Force", 0, 10, maxSpeed, 0.1, (val) => {
+    vehicles.forEach(v => {
+      v.maxForce = val;
+    });
+  })
+
   gui.panel.addProgressBar("Mic level", 1, 0, 0);
   gui.panel.addProgressBar("Wind FL", 1, 0, 0);
   gui.panel.addText("info", "");
