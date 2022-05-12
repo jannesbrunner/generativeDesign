@@ -13,7 +13,8 @@ var font;
 // Global Variables //
 var canvasWidth = 800;
 var canvasHeight = 400;
-
+var mic;
+var micLevel;
 var vehicles = [];
 
 
@@ -66,6 +67,7 @@ function guiSetup() {
       v.radius = val;
     });
   })
+  gui.panel.addProgressBar("Mic level", 800, 0, 0);
 
   // Extra GUI since color picker in quicksettings is broken...
   
@@ -78,7 +80,7 @@ function randomColor() {
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   pixelDensity(2);
-
+  micLevel = 0;
   bgColor = createColorPicker(randomColor());
   vColor = createColorPicker(randomColor());
   
@@ -88,6 +90,13 @@ function setup() {
   // fill(255);
   // noStroke();
   //text('CJDesign', canvasWidth/4, canvasHeight/2);
+
+   // Create an Audio input
+   mic = new p5.AudioIn();
+
+   // start the Audio Input.
+   // By default, it does not .connect() (to the computer speakers)
+   mic.start();
 
   var points = font.textToPoints('CJDesign', canvasWidth/8, canvasHeight/2, 192);
 
@@ -100,6 +109,8 @@ function setup() {
 }
 
 function draw() {
+  micLevel = mic.getLevel() * 1000;
+  gui.panel.setValue("Mic level", micLevel);
   frameRate(fps);  
   background(bgColor.color());
   vehicles.forEach(v => {

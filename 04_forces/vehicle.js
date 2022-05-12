@@ -15,6 +15,10 @@ class Vehicle {
         this.r = r;
     }
 
+    set color(c) {
+        this.vColor = c;
+    }
+
     update() {
         this.pos.add(this.vel);
         this.vel.add(this.acc)
