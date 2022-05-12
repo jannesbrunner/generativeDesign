@@ -11,10 +11,11 @@ var gui;
 var font;
 
 // Global Variables //
-var canvasWidth = 800;
-var canvasHeight = 400;
+var canvasWidth = 1000;
+var canvasHeight = 600;
 var mic;
 var micLevel;
+var micForceLevel;
 var vehicles = [];
 
 
@@ -37,6 +38,7 @@ var vRadius = 6;
 
 // Parameters //
 var fr; // current frame rate
+var fl;
 var flowfield;
 
 
@@ -67,7 +69,8 @@ function guiSetup() {
       v.radius = val;
     });
   })
-  gui.panel.addProgressBar("Mic level", 800, 0, 0);
+  gui.panel.addProgressBar("Mic level", 1, 0, 0);
+  gui.panel.addProgressBar("Mic FL", 1, 0, 0);
 
   // Extra GUI since color picker in quicksettings is broken...
   
@@ -98,20 +101,29 @@ function setup() {
    // By default, it does not .connect() (to the computer speakers)
    mic.start();
 
-  var points = font.textToPoints('CJDesign', canvasWidth/8, canvasHeight/2, 192);
+  var points = font.textToPoints('CJDesign', canvasWidth/15, canvasHeight/2, 255);
 
   points.forEach((fontPoint) => {
     let vehicle = new Vehicle(fontPoint.x, fontPoint.y);
     vehicles.push(vehicle);
   })
   fr = createP('');
+  fl = createP('');
   fr.hide();
 }
 
+function gate(level) {
+    if(level < 0) return 0
+    return level;
+}
+
 function draw() {
-  micLevel = Math.floor(mic.getLevel() * 1000);
+  micLevel = mic.getLevel();
+  micForceLevel = gate(1+Math.log10((micLevel*10)));
+  fl.html(micForceLevel);
   gui.panel.setValue("Mic level", micLevel);
-  console.log(micLevel);
+  gui.panel.setValue("Mic FL", micForceLevel);
+  
   frameRate(fps);  
   background(bgColor.color());
   vehicles.forEach(v => {

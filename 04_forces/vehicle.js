@@ -41,14 +41,14 @@ class Vehicle {
         const windMic = this.windMic(this.target);
 
         // power order the forces
-        arrive.mult(1);
+        flee.mult(4);
+        arrive.mult(0.5);
+        windMic.mult(1);
        
-        windMic.mult(2);
-        flee.mult(5);
-
-        this.applyForce(arrive);
         this.applyForce(flee);
+        this.applyForce(arrive);
         this.applyForce(windMic);
+        
     }
 
     arrive(target) {
@@ -88,14 +88,11 @@ class Vehicle {
 
     }
 
-    windMic(target) {
-        const desired = p5.Vector.sub(target, this.vel);
-        
-            desired.setMag(micLevel / 50);
-            //desired.mult(-1);
-            const steer = p5.Vector.sub(desired, this.vel);
-            steer.limit(this.maxForce);
-            return steer;
+    windMic() {
+        const desired = createVector(noise(this.pos.x, this.pos.y), noise(this.pos.x, this.pos.y, 24)-0.5);
+        desired.setMag(micForceLevel);
+        desired.limit(this.maxForce);
+        return desired;
       
         
     }
