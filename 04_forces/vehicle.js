@@ -39,16 +39,13 @@ class Vehicle {
         const arrive = this.arrive(this.target);
         const flee = this.flee(createVector(mouseX, mouseY));
         const windMic = this.windMic(this.target);
-
         // power order the forces
         flee.mult(4);
         arrive.mult(0.5);
         windMic.mult(1);
-       
-        this.applyForce(flee);
+        if (useWind) this.applyForce(windMic);
+        if (useMouse) this.applyForce(flee);
         this.applyForce(arrive);
-        this.applyForce(windMic);
-        
     }
 
     arrive(target) {
@@ -67,16 +64,22 @@ class Vehicle {
     flee(target) {
         const desired = p5.Vector.sub(target, this.pos);
         const d = desired.mag();
-        if (d < 50) {
+        if (d < 50 && !powerMouse) {
             desired.setMag(this.maxSpeed);
             desired.mult(-1);
             const steer = p5.Vector.sub(desired, this.vel);
             steer.limit(this.maxForce);
             return steer;
-        } else {
+        } else if (powerMouse) {
+            desired.setMag(this.maxSpeed);
+            desired.mult(-1);
+            const steer = p5.Vector.sub(desired, this.vel);
+            steer.limit(this.maxForce);
+            return steer;
+        }
+        else {
             return createVector(0, 0);
         }
-
     }
 
     seek(target) {
@@ -89,7 +92,13 @@ class Vehicle {
     }
 
     windMic() {
-        const desired = createVector(noise(this.pos.x, this.pos.y), noise(this.pos.x, this.pos.y, 24)-0.5);
+
+
+        //const x = noise(map(spectrum.slice(60, 175).reduce((a, b) => a + b), 0, 28750, 0.1, 10), this.pos.y) 
+        //const y = noise(map(spectrum.slice(176, 350).reduce((a, b) => a + b), 0, 28750, -0.5, 0.5), this.pos.y, 24) -0.5
+        //const desired = createVector(x, y)
+
+        const desired = createVector(noise(this.pos.x, this.pos.y), noise(this.pos.x, this.pos.y, 24) - 0.5);
         desired.setMag(micForceLevel);
         desired.limit(this.maxForce);
         return desired;

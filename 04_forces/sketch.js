@@ -29,22 +29,21 @@ var showSpec = false;
 var useMic = true;
 var circleColor = false;
 var isFullscreen = false;
-
+var useNoiseColor = false;
+var useMouse = false;
+var useWind = false;
 var bgColor;
 var vColor;
-
 var vRadius = 6;
+var powerMouse = false;
 
 // Parameters //
 var fr; // current frame rate
 var fl;
-var flowfield;
-
 
 function preload() {
   // Lemon Jelly by Billy Argel
   font = loadFont("./font.ttf");
-
 }
 
 function keyReleased() {
@@ -68,6 +67,14 @@ function keyReleased() {
   }
 }
 
+function mousePressed() {
+  powerMouse = true;
+}
+
+function mouseReleased() {
+  powerMouse = false;
+}
+
 function guiSetup() {
   // init guit
   gui = new Gui();
@@ -85,15 +92,16 @@ function guiSetup() {
     });
   })
   gui.panel.addProgressBar("Mic level", 1, 0, 0);
-  gui.panel.addProgressBar("Mic FL", 1, 0, 0);
+  gui.panel.addProgressBar("Wind FL", 1, 0, 0);
   gui.panel.addText("info", "");
   gui.panel.addBoolean("Fullscreen", fullscreen(), () => {
     fullscreen(!fullscreen());
     resizeCanvas(windowWidth, windowHeight);
   });  
-
+  gui.panel.addBoolean("Glow", useNoiseColor, () => useNoiseColor = !useNoiseColor); 
+  gui.panel.addBoolean("Wind", useWind, () => useWind = !useWind);  
+  gui.panel.addBoolean("Mouse Force", useMouse, () => useMouse = !useMouse); 
   // Extra GUI since color picker in quicksettings is broken...
-
 }
 
 function randomColor() {
@@ -104,27 +112,22 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   pixelDensity(2);
   micLevel = 0;
-  bgColor = createColorPicker(randomColor());
+  bgColor = createColorPicker(color(10));
   vColor = createColorPicker(randomColor());
-
   guiSetup();
   // textFont(font);
   // textSize(192);
   // fill(255);
   // noStroke();
   //text('CJDesign', canvasWidth/4, canvasHeight/2);
-
   // Create an Audio input
   mic = new p5.AudioIn();
-
   // start the Audio Input.
   // By default, it does not .connect() (to the computer speakers)
   mic.start();
   fft = new p5.FFT();
   fft.setInput(mic);
-
   var points = font.textToPoints('CJDesign', width / 4, height / 2, map(width, 1, 7680, 50, 1000));
-
   points.forEach((fontPoint) => {
     let vehicle = new Vehicle(fontPoint.x, fontPoint.y);
     vehicles.push(vehicle);
@@ -132,13 +135,16 @@ function setup() {
   fr = createP('');
   fl = createP('');
   fr.hide();
- 
 }
 
 function gate(level) {
   if (level < 0) return 0
   return level;
 }
+
+function mapTo100(val) {
+  return map(val, 0, 1, 0, 100);
+} 
 
 function draw() {
   if (useMic) {
@@ -148,7 +154,7 @@ function draw() {
   }
   fl.html(micForceLevel);
   gui.panel.setValue("Mic level", micLevel);
-  gui.panel.setValue("Mic FL", micForceLevel);
+  gui.panel.setValue("Wind FL", micForceLevel);
 
   frameRate(fps);
   background(bgColor.color());
@@ -156,12 +162,15 @@ function draw() {
   vehicles.forEach(v => {
     v.behaviors();
     v.update();
-    v.color = vColor.color();
+    if(useNoiseColor) {
+      colorMode(HSB, 100);
+      v.color = color(15, 100, mapTo100(noise(v.pos.x / 100, v.pos.y/100 , frameCount /110 * ((micForceLevel/100 + 0.1) * 10))));
+    } else {
+      v.color = vColor.color();
+    }
     v.show();
   });
-
   fr.html(floor(frameRate()));
-
 }
 
 function drawSpectrum() {
