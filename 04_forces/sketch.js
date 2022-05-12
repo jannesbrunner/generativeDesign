@@ -93,12 +93,12 @@ function guiSetup() {
       v.radius = val;
     });
   })
-  gui.panel.addRange("Max Speed", 0, 20, maxSpeed, 1, (val) => {
+  gui.panel.addRange("Max Speed", 0, 50, maxSpeed, 1, (val) => {
     vehicles.forEach(v => {
       v.maxSpeed = val;
     });
   })
-  gui.panel.addRange("Max Force", 0, 10, maxSpeed, 0.1, (val) => {
+  gui.panel.addRange("Max Force", 0, 20, maxSpeed, 0.1, (val) => {
     vehicles.forEach(v => {
       v.maxForce = val;
     });
