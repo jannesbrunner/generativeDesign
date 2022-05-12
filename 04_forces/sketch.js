@@ -109,8 +109,9 @@ function setup() {
 }
 
 function draw() {
-  micLevel = mic.getLevel() * 1000;
+  micLevel = Math.floor(mic.getLevel() * 1000);
   gui.panel.setValue("Mic level", micLevel);
+  console.log(micLevel);
   frameRate(fps);  
   background(bgColor.color());
   vehicles.forEach(v => {

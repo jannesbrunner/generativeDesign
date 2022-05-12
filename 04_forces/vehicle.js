@@ -38,13 +38,17 @@ class Vehicle {
     behaviors() {
         const arrive = this.arrive(this.target);
         const flee = this.flee(createVector(mouseX, mouseY));
+        const windMic = this.windMic(this.target);
 
         // power order the forces
         arrive.mult(1);
+       
+        windMic.mult(2);
         flee.mult(5);
 
         this.applyForce(arrive);
         this.applyForce(flee);
+        this.applyForce(windMic);
     }
 
     arrive(target) {
@@ -82,6 +86,18 @@ class Vehicle {
         steer.limit(this.maxForce);
         return steer;
 
+    }
+
+    windMic(target) {
+        const desired = p5.Vector.sub(target, this.vel);
+        
+            desired.setMag(micLevel / 50);
+            //desired.mult(-1);
+            const steer = p5.Vector.sub(desired, this.vel);
+            steer.limit(this.maxForce);
+            return steer;
+      
+        
     }
 
 }
