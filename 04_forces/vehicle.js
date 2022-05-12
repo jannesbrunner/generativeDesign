@@ -1,7 +1,7 @@
 class Vehicle {
 
     constructor(x, y) {
-        this.pos = createVector(random(canvasWidth), random(canvasHeight));
+        this.pos = createVector(random(width), random(height));
         this.target = createVector(x, y);
         this.vel = p5.Vector.random2D();
         this.acc = createVector();
@@ -93,8 +93,6 @@ class Vehicle {
         desired.setMag(micForceLevel);
         desired.limit(this.maxForce);
         return desired;
-      
-        
     }
 
 }
