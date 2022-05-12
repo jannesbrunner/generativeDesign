@@ -26,6 +26,9 @@ var showGui = true;
 var showFPS = false;
 var circleColor = false;
 
+var bgColor;
+var vColor;
+
 var bgR, bgG, bgB, bgA;
 var vRadius = 6;
 
@@ -61,25 +64,23 @@ function guiSetup() {
     isPlaying ? loop() : noLoop();
   });
   gui.panel.addRange("FPS", 1, 60, fps, 1, (val) => fps = val);
-  gui.panel.addRange("BG: R", 0, 255, bgR, 1, (val) => bgR = val);
-  gui.panel.addRange("BG: G", 0, 255, bgG, 1, (val) => bgG = val);
-  gui.panel.addRange("BG: B", 0, 255, bgB, 1, (val) => bgB = val);
-  gui.panel.addRange("BG: A", 0, 255, bgA, 1, (val) => bgA = val);
   gui.panel.addRange("Radius", 0, 12, vRadius, 1, (val) => {
     vehicles.forEach(v => {
       v.radius = val;
     });
   })
+  // Extra GUI since color picker in quicksettings is broken...
+
 }
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   pixelDensity(2);
 
-  bgR = random(0, 255);
-  bgG = random(0, 255);
-  bgB = random(0, 255);
-  bgA = random(0, 255);
+  bgColor = createColorPicker(random(0, 255), random(0, 255), random(0, 255));
+  vColor = createColorPicker(random(0, 255), random(0, 255), random(0, 255));
+
+
   
   guiSetup();
   // textFont(font);
@@ -93,7 +94,6 @@ function setup() {
   points.forEach((fontPoint) => {
     let vehicle = new Vehicle(fontPoint.x, fontPoint.y);
     vehicles.push(vehicle);
-
   })
   fr = createP('');
   fr.hide();
@@ -101,12 +101,11 @@ function setup() {
 
 function draw() {
   frameRate(fps);  
-  background(bgR, bgG, bgB, bgA);
+  background(bgColor.color());
   vehicles.forEach(v => {
     v.behaviors();
     v.update();
     v.show();
-
   });
 
 
