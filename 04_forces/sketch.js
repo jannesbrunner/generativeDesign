@@ -47,8 +47,8 @@ function preload() {
 
 function keyReleased() {
   if(key === " ") {
-    showGui ? gui.panel.hide() : gui.panel.show();
-    showGui = !showGui;
+    isPlaying = !isPlaying;
+    isPlaying ? loop() : noLoop(); 
   }
   if(key === "f") {
     showFPS ? fr.hide() : fr.show();
@@ -56,31 +56,31 @@ function keyReleased() {
   }
 }
 
-function guiSetup() {
+function guiSetup() {   
    // init guit
   gui = new Gui();
-  gui.panel.addButton("Play/Pause", () => {
-    isPlaying = !isPlaying;
-    isPlaying ? loop() : noLoop();
-  });
+  gui.panel.addHTML("Info", `Play Pause: Space<br/>Toggle Gui: G<br/>Toggle FPS: f`);
   gui.panel.addRange("FPS", 1, 60, fps, 1, (val) => fps = val);
   gui.panel.addRange("Radius", 0, 12, vRadius, 1, (val) => {
     vehicles.forEach(v => {
       v.radius = val;
     });
   })
-  // Extra GUI since color picker in quicksettings is broken...
 
+  // Extra GUI since color picker in quicksettings is broken...
+  
+}
+
+function randomColor() {
+  return color(random(0, 255), random(0, 255), random(0, 255), random(0, 255));
 }
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   pixelDensity(2);
 
-  bgColor = createColorPicker(random(0, 255), random(0, 255), random(0, 255));
-  vColor = createColorPicker(random(0, 255), random(0, 255), random(0, 255));
-
-
+  bgColor = createColorPicker(randomColor());
+  vColor = createColorPicker(randomColor());
   
   guiSetup();
   // textFont(font);
@@ -105,12 +105,14 @@ function draw() {
   vehicles.forEach(v => {
     v.behaviors();
     v.update();
+    v.color = vColor.color();
     v.show();
   });
 
 
 
   fr.html(floor(frameRate()));
+
 }
 
 
