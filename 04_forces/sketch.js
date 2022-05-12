@@ -25,6 +25,8 @@ var fps = 60;
 var showGui = true;
 var showFPS = false;
 
+var bgR, bgG, bgB, bgA;
+
 // Parameters //
 var fr; // current frame rate
 var flowfield;
@@ -59,13 +61,22 @@ function guiSetup() {
     isPlaying ? loop() : noLoop();
   });
   gui.panel.addRange("FPS", 1, 60, fps, 1, (val) => fps = val);
+  gui.panel.addRange("BG: R", 0, 255, bgR, 1, (val) => bgR = val);
+  gui.panel.addRange("BG: G", 0, 255, bgG, 1, (val) => bgG = val);
+  gui.panel.addRange("BG: B", 0, 255, bgB, 1, (val) => bgB = val);
+  gui.panel.addRange("BG: A", 0, 255, bgA, 1, (val) => bgA = val);
 }
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   pixelDensity(2);
-  guiSetup();
+
+  bgR = random(0, 255);
+  bgG = random(0, 255);
+  bgB = random(0, 255);
+  bgA = random(0, 255);
   
+  guiSetup();
   // textFont(font);
   // textSize(192);
   // fill(255);
@@ -85,7 +96,7 @@ function setup() {
 
 function draw() {
   frameRate(fps);  
-  background(51);
+  background(bgR, bgG, bgB, bgA);
   vehicles.forEach(v => {
     v.behaviors();
     v.update();
