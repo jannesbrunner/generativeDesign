@@ -7,6 +7,7 @@ class Gui {
     constructor() {
         this.panel = QuickSettings.create(canvasWidth, 20, "Settings");
         this.updateGuiPositions();
+        this.panel.setKey("g");
     }
 
     get panel() {
