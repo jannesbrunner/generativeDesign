@@ -24,16 +24,16 @@ var isPlaying = true;
 var fps = 60;
 var showGui = true;
 var showFPS = false;
+var circleColor = false;
 
 var bgR, bgG, bgB, bgA;
+var vRadius = 6;
+
+
 
 // Parameters //
 var fr; // current frame rate
 var flowfield;
-
-
-// Pictures //
-
 
 
 function preload() { 
@@ -65,6 +65,11 @@ function guiSetup() {
   gui.panel.addRange("BG: G", 0, 255, bgG, 1, (val) => bgG = val);
   gui.panel.addRange("BG: B", 0, 255, bgB, 1, (val) => bgB = val);
   gui.panel.addRange("BG: A", 0, 255, bgA, 1, (val) => bgA = val);
+  gui.panel.addRange("Radius", 0, 12, vRadius, 1, (val) => {
+    vehicles.forEach(v => {
+      v.radius = val;
+    });
+  })
 }
 
 function setup() {
@@ -101,7 +106,10 @@ function draw() {
     v.behaviors();
     v.update();
     v.show();
+
   });
+
+
 
   fr.html(floor(frameRate()));
 }
