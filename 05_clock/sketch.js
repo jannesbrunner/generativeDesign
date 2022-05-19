@@ -1,9 +1,14 @@
 /// <reference path="./../p5.global-mode.d.ts" />
-
 let angle = 0.1;
 
 let cloud1Pos = -50;
 let cloud2Pos = -100;
+
+let isPlaying = true;
+let gui;
+let currentTimeString;
+let customTime = "12:00";
+let useCustomTime = false;
 
 // misc
 const dotSpace = 9;
@@ -15,6 +20,14 @@ const minutes9 = [];
 const minutes5 = [];
 const hours9 = [];
 const hours2 = [];
+
+function keyReleased() {
+    if (key === " ") {
+        isPlaying = !isPlaying;
+        isPlaying ? loop() : noLoop();
+        gui.setValue("Log", isPlaying ? "⏵︎" : "⏸︎");
+    }
+}
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -31,7 +44,6 @@ function setup() {
         { x: -15, y: -8 - 7 * dotSpace },
         { x: -15, y: -8 - 8 * dotSpace },
     )
-
     seconds5.push(
         { x: -15, y: -8 - 10 * dotSpace },
         { x: -15, y: -8 - 11 * dotSpace },
@@ -39,9 +51,7 @@ function setup() {
         { x: -15, y: -8 - 13 * dotSpace },
         { x: -15, y: -8 - 14 * dotSpace },
     )
-
     minutes9.push(
-
         { x: -15, y: -8 - 18 * dotSpace },
         { x: -15, y: -8 - 19 * dotSpace },
         { x: -15, y: -8 - 20 * dotSpace },
@@ -60,7 +70,6 @@ function setup() {
         { x: -15, y: -8 - 31 * dotSpace },
         { x: -15, y: -8 - 32 * dotSpace },
     )
-
     hours9.push(
         { x: -15, y: -8 - 36 * dotSpace },
         { x: -15, y: -8 - 37 * dotSpace },
@@ -72,13 +81,24 @@ function setup() {
         { x: -15, y: -8 - 43 * dotSpace },
         { x: -15, y: -8 - 44 * dotSpace },
     )
-
     hours2.push(
         { x: -15, y: -8 - 46 * dotSpace },
         { x: -15, y: -8 - 47 * dotSpace }
     )
 
-
+    gui = QuickSettings.create(width - 300, 20, "Settings");
+    gui.setKey("g");
+    gui.addText("Current Time", currentTimeString);
+    gui.addHTML("Info", `
+    Play Pause:   <b>Space</b><br/>
+    Toggle Gui:   <b>g</b><br/>
+    `);
+    gui.addText("Log", "");
+    gui.addTime("Custom Time", customTime, (val) => {
+        customTime = val;
+        console.log(customTime);
+    });
+    gui.addBoolean("Set Custom Time on Clock", useCustomTime, (val) => useCustomTime = val);
 }
 
 const scaling = () => {
@@ -87,12 +107,31 @@ const scaling = () => {
     if (windowWidth <= 2560) return 2.8
 }
 
+function getTime() {
+    if (useCustomTime) {
+        const hoursMinutes = customTime.split(":");
+        const customHours = parseInt(hoursMinutes[0])
+        const customMinutes = parseInt(hoursMinutes[1]);
+        return {
+            hr: customHours,
+            min: customMinutes,
+            sec: 0,
+        }
+
+    } else {
+        return {
+            hr: hour(),
+            min: minute(),
+            sec: second(),
+        }
+    }
+}
+
 function draw() {
 
-
-    let hr = hour();
-    let min = minute();
-    let sec = second();
+    let { hr, min, sec } = getTime();
+    let displayMin = min < 10 ? `0${min}` : min;
+    gui.setValue("Current Time", `${hr}:${displayMin}:${sec}`);
 
     background(255);
 
@@ -101,7 +140,6 @@ function draw() {
 
     ellipse(cloud1Pos, height / 4, 200, 50 * sin(angle - 0.01));
     ellipse(cloud2Pos - 50, height / 5, 250 * sin(angle), 80);
-
 
     // Paint surface
     push();
@@ -128,19 +166,13 @@ function draw() {
 }
 
 function paintClock() {
-
-    let hr = hour();
-    let min = minute();
-    let sec = second();
-
-
+    let { hr, min, sec } = getTime();
     // Points
     push();
-
-    translate(width / 2, 0.88 * height);
-    scale(0.9);
+    translate(width / 2, 0.82 * height);
+    scale(0.9)
     strokeWeight(7);
-    stroke('black');
+    stroke(35);
     seconds9.forEach((p) => point(p.x, p.y));
     seconds5.forEach((p) => point(p.x, p.y));
     minutes9.forEach((p) => point(p.x, p.y));
@@ -183,7 +215,7 @@ function paintClock() {
 }
 
 function paintSun() {
-    let hr = hour();
+    let { hr } = getTime();
     let hrAngle = map(hr, 0, 23, -90, 260);
     push();
     rectMode(CENTER);
@@ -192,22 +224,24 @@ function paintSun() {
     rotate(hrAngle);
     ellipse(-320, 0, 100);
     pop();
+
+    
 }
 
 function paintTower() {
     push();
-    translate(width / 2, 0.88 * height);
+    translate(width / 2, 0.95 * height);
     fill(48, 48, 48, 255);
     beginShape();
-    vertex(-55, 0)
-    vertex(-50, -400)
-    vertex(-75, -450)
-    vertex(-25, -450)
-    vertex(-15, -500)
-    vertex(0, -450)
-    vertex(50, -450)
-    vertex(25, -400)
-    vertex(30, 0)
+    vertex(-50, 0) // 1
+    vertex(-35, -500) // 2
+    vertex(-75, -550)
+    vertex(-25, -550)
+    vertex(-15, -600)
+    vertex(0, -550)
+    vertex(50, -550)
+    vertex(10, -500)
+    vertex(25, 0)
     endShape();
     pop();
 }
