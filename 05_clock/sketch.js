@@ -1,6 +1,9 @@
 /// <reference path="./../p5.global-mode.d.ts" />
 
-var angle = 0.1;
+    let angle = 0.1;
+
+    let cloud1Pos = -50; 
+    let cloud2Pos = -100;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -8,25 +11,27 @@ function setup() {
 }
 
 const scaling = () => {
-    if(windowWidth <= 720) return 1
-    if(windowWidth <= 1920) return 1.3
-    if(windowWidth <= 2560) return 2.8
- }
+    if (windowWidth <= 900) return 1
+    if (windowWidth <= 1920) return 1.3
+    if (windowWidth <= 2560) return 2.8
+}
 
 function draw() {
 
-    
+
     let hr = hour();
     let min = minute();
     let sec = second();
 
     background(255);
 
+    //Paint sun
+    paintSun();
+    
+    ellipse(cloud1Pos, height/4, 200, 50 * sin(angle - 0.01));
+    ellipse(cloud2Pos - 50, height/5, 250 * sin(angle), 80);
 
    
-  
-    angle += 1;
-
     // Paint surface
     push();
     translate(0, 0.75 * height);
@@ -42,29 +47,34 @@ function draw() {
     // Paint Tower
     paintTower();
 
-     let hrAngle = map(hr, 0, 23, 90, -90);    
-     push();
-     rectMode(CENTER);
-     fill(255, 244, 25, 150);
-     translate(width/2, height/2);
-     scale(scaling());
-     rotate(0);
-     ellipse(100, -100, 100);
-     pop();
+    cloud1Pos += 1;
+    cloud2Pos += 1.2;
+    angle += 1;
+    if(cloud1Pos > width) cloud1Pos = -50;
+    if(cloud2Pos > width) cloud2Pos = -100;
+}
 
-     //width/2, height/1.3
-     
-     // 166 = Sonnen aufgang
-
+function paintSun() {
+    let hr = hour();
+    let hrAngle = map(hr, 0, 23, -90, 260);
+    push();
+    rectMode(CENTER);
+    fill(255, 244, 25, 150);
+    translate(width / 2, height / 1.5);
+    scale(scaling());
+    rotate(hrAngle);
+    ellipse(-320, 0, 100);
+    pop();
 }
 
 function paintTower() {
-    
+
     push();
     translate(width / 2, 0.75 * height);
+    fill(48, 48, 48, 255);
     scale(scaling());
     beginShape();
-    vertex(-50,0)
+    vertex(-50, 0)
     vertex(-50, -250)
     vertex(-75, -280)
     vertex(-25, -280)
@@ -72,7 +82,7 @@ function paintTower() {
     vertex(0, -280)
     vertex(50, -280)
     vertex(25, -250)
-    vertex(25,0)
+    vertex(25, 0)
     endShape();
     pop();
 
