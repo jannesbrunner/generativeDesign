@@ -159,9 +159,12 @@ function draw() {
 
     //Paint sun
     paintSun();
-
+    push();
+    colorMode(HSB);
+    fill(360, 0, getSunlightB(hr) + 20);
     ellipse(cloud1Pos, height / 4, 200, 50 * sin(angle - 0.01));
     ellipse(cloud2Pos - 50, height / 5, 250 * sin(angle), 80);
+    pop()
 
     // Paint surface
     push();
