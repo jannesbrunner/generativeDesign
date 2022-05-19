@@ -83,7 +83,7 @@ function setup() {
 }
 
 const scaling = () => {
-    if (windowWidth <= 900) return 1
+    if (windowWidth <= 900) return 0.8
     if (windowWidth <= 1920) return 1.3
     if (windowWidth <= 2560) return 2.8
 }
@@ -137,7 +137,9 @@ function paintClock() {
 
     // Points
     push();
+    
     translate(width / 2, 0.88 * height);
+    scale(0.9);
     strokeWeight(7);
     stroke('black');
     seconds9.forEach( (p) => point(p.x, p.y));
@@ -147,8 +149,6 @@ function paintClock() {
     hours9.forEach( (p) => point(p.x, p.y));
     hours2.forEach( (p) => point(p.x, p.y));
     stroke('white');
-    
-    
     // seconds 9
     for (let index = 0; index < sec % 10; index++) {
         point(seconds9[index].x, seconds9[index].y);
@@ -157,7 +157,6 @@ function paintClock() {
     for (let index = 0; index < Math.floor(sec / 10); index++) {
         point(seconds5[index].x, seconds5[index].y);
     }
-
     // minutes 9
     for (let index = 0; index < min % 10; index++) {
         point(minutes9[index].x, minutes9[index].y);
@@ -179,12 +178,9 @@ function paintClock() {
     stroke(color);
     point(-35, -8 - 17 * dotSpace);
     point(10, -8 - 17 * dotSpace);
-
     point(-35, -8 - 35 * dotSpace);
     point(10, -8 - 35 * dotSpace);
-
     pop();
-
 }
 
 function paintSun() {
@@ -194,7 +190,6 @@ function paintSun() {
     rectMode(CENTER);
     fill(255, 244, 25, 150);
     translate(width / 2, height / 1.5);
-    scale(scaling());
     rotate(hrAngle);
     ellipse(-320, 0, 100);
     pop();
@@ -203,21 +198,19 @@ function paintSun() {
 function paintTower() {
     push();
     translate(width / 2, 0.88 * height);
-    fill(48, 48, 48, 255);
-    scale(scaling());
+    fill(48, 48, 48, 255); 
     beginShape();
     vertex(-55, 0)
-    vertex(-50, -350)
-    vertex(-75, -370)
-    vertex(-25, -370)
-    vertex(-15, -450)
-    vertex(0, -370)
-    vertex(50, -370)
-    vertex(25, -350)
+    vertex(-50, -400)
+    vertex(-75, -450)
+    vertex(-25, -450)
+    vertex(-15, -500)
+    vertex(0, -450)
+    vertex(50, -450)
+    vertex(25, -400)
     vertex(30, 0)
     endShape();
     pop();
-
 }
 
 function oldWatch() {
@@ -240,7 +233,6 @@ function oldWatch() {
     line(0, 0, 100, 0);
     pop();
 
-
     stroke(255, 100, 180);
     let minAngle = map(min, 0, 60, 0, 360);
     arc(0, 0, 280, 280, 0, minAngle);
@@ -250,7 +242,6 @@ function oldWatch() {
     stroke(255, 100, 180);
     line(0, 0, 100, 0);
     pop();
-
 
     stroke(255, 100, 110);
     let hrAngle = map(hr % 12, 0, 12, 0, 360);
