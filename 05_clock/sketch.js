@@ -43,8 +43,6 @@ function setup() {
 
     minutes9.push(
 
-        { x: -15, y: -8 - 17 * dotSpace },
-        { x: -15, y: -8 - 18 * dotSpace },
         { x: -15, y: -8 - 19 * dotSpace },
         { x: -15, y: -8 - 20 * dotSpace },
         { x: -15, y: -8 - 21 * dotSpace },
@@ -52,31 +50,33 @@ function setup() {
         { x: -15, y: -8 - 23 * dotSpace },
         { x: -15, y: -8 - 24 * dotSpace },
         { x: -15, y: -8 - 25 * dotSpace },
+        { x: -15, y: -8 - 26 * dotSpace },
+        { x: -15, y: -8 - 27 * dotSpace },
     )
 
     minutes5.push(
-        { x: -15, y: -8 - 27 * dotSpace },
-        { x: -15, y: -8 - 28 * dotSpace },
         { x: -15, y: -8 - 29 * dotSpace },
         { x: -15, y: -8 - 30 * dotSpace },
         { x: -15, y: -8 - 31 * dotSpace },
+        { x: -15, y: -8 - 32 * dotSpace },
+        { x: -15, y: -8 - 33 * dotSpace },
     )
 
     hours9.push(
-        { x: -15, y: -8 - 33 * dotSpace },
-        { x: -15, y: -8 - 34 * dotSpace },
-        { x: -15, y: -8 - 35 * dotSpace },
-        { x: -15, y: -8 - 36 * dotSpace },
         { x: -15, y: -8 - 37 * dotSpace },
         { x: -15, y: -8 - 38 * dotSpace },
         { x: -15, y: -8 - 39 * dotSpace },
         { x: -15, y: -8 - 40 * dotSpace },
         { x: -15, y: -8 - 41 * dotSpace },
+        { x: -15, y: -8 - 42 * dotSpace },
+        { x: -15, y: -8 - 43 * dotSpace },
+        { x: -15, y: -8 - 44 * dotSpace },
+        { x: -15, y: -8 - 45 * dotSpace },
     )
 
     hours2.push(
-        { x: -15, y: -8 - 43 * dotSpace },
-        { x: -15, y: -8 - 44 * dotSpace }
+        { x: -15, y: -8 - 47 * dotSpace },
+        { x: -15, y: -8 - 48 * dotSpace }
     )
 
 
@@ -126,7 +126,6 @@ function draw() {
     if (cloud1Pos > width) cloud1Pos = -50;
     if (cloud2Pos > width) cloud2Pos = -100;
 
-
 }
 
 function paintClock() {
@@ -138,9 +137,18 @@ function paintClock() {
 
     // Points
     push();
-    stroke('white');
-    strokeWeight(7);
     translate(width / 2, 0.88 * height);
+    strokeWeight(7);
+    stroke('black');
+    seconds9.forEach( (p) => point(p.x, p.y));
+    seconds5.forEach( (p) => point(p.x, p.y));
+    minutes9.forEach( (p) => point(p.x, p.y));
+    minutes5.forEach( (p) => point(p.x, p.y));
+    hours9.forEach( (p) => point(p.x, p.y));
+    hours2.forEach( (p) => point(p.x, p.y));
+    stroke('white');
+    
+    
     // seconds 9
     for (let index = 0; index < sec % 10; index++) {
         point(seconds9[index].x, seconds9[index].y);
@@ -166,6 +174,15 @@ function paintClock() {
     for (let index = 0; index < Math.floor(hr / 10); index++) {
         point(hours2[index].x, hours2[index].y);
     }
+
+    let color = sec % 2 == 0 ? 'red' : 'black';
+    stroke(color);
+    point(-35, -8 - 17 * dotSpace);
+    point(10, -8 - 17 * dotSpace);
+
+    point(-35, -8 - 35 * dotSpace);
+    point(10, -8 - 35 * dotSpace);
+
     pop();
 
 }
@@ -190,13 +207,13 @@ function paintTower() {
     scale(scaling());
     beginShape();
     vertex(-55, 0)
-    vertex(-50, -330)
-    vertex(-75, -350)
-    vertex(-25, -350)
-    vertex(-15, -390)
-    vertex(0, -350)
-    vertex(50, -350)
-    vertex(25, -330)
+    vertex(-50, -350)
+    vertex(-75, -370)
+    vertex(-25, -370)
+    vertex(-15, -450)
+    vertex(0, -370)
+    vertex(50, -370)
+    vertex(25, -350)
     vertex(30, 0)
     endShape();
     pop();
