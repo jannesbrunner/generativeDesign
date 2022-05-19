@@ -127,13 +127,35 @@ function getTime() {
     }
 }
 
+function getSunlightB(h) {
+    switch (h) {
+        case 7: return 10;
+        case 8: return 20; 
+        case 9: return 30;
+        case 10: return 40;
+        case 11: return 55;
+        case 12: return 60;
+        case 13: return 55;
+        case 14: return 50;
+        case 15: return 45;
+        case 16: return 40;
+        case 17: return 35;
+        case 18: return 30;
+        case 19: return 20;                         
+        default: return 10;
+    }
+}
+
 function draw() {
 
     let { hr, min, sec } = getTime();
     let displayMin = min < 10 ? `0${min}` : min;
     gui.setValue("Current Time", `${hr}:${displayMin}:${sec}`);
 
-    background(255);
+    push();
+    colorMode(HSB);
+    background(198, 100, getSunlightB(hr) + 10);
+    pop()
 
     //Paint sun
     paintSun();
@@ -144,7 +166,8 @@ function draw() {
     // Paint surface
     push();
     translate(0, 0.75 * height);
-    fill(51, 102, 0);
+    colorMode(HSB);
+    fill(134, 100, getSunlightB(hr));
     beginShape();
     vertex(0, 0);
     vertex((width / 2), -20)
@@ -219,7 +242,8 @@ function paintSun() {
     let hrAngle = map(hr, 0, 23, -90, 260);
     push();
     rectMode(CENTER);
-    fill(255, 244, 25, 150);
+    colorMode(HSB)
+    fill(getSunlightB(hr) < 40 ? 40 : getSunlightB(hr) , 100, 100);
     translate(width / 2, height / 1.5);
     rotate(hrAngle);
     ellipse(-320, 0, 100);
