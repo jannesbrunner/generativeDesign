@@ -30,19 +30,19 @@ function setup() {
         { x: -15, y: -8 - 6 * dotSpace },
         { x: -15, y: -8 - 7 * dotSpace },
         { x: -15, y: -8 - 8 * dotSpace },
-        { x: -15, y: -8 - 9 * dotSpace },
     )
 
     seconds5.push(
+        { x: -15, y: -8 - 10 * dotSpace },
         { x: -15, y: -8 - 11 * dotSpace },
         { x: -15, y: -8 - 12 * dotSpace },
         { x: -15, y: -8 - 13 * dotSpace },
         { x: -15, y: -8 - 14 * dotSpace },
-        { x: -15, y: -8 - 15 * dotSpace },
     )
 
     minutes9.push(
 
+        { x: -15, y: -8 - 18 * dotSpace },
         { x: -15, y: -8 - 19 * dotSpace },
         { x: -15, y: -8 - 20 * dotSpace },
         { x: -15, y: -8 - 21 * dotSpace },
@@ -51,18 +51,18 @@ function setup() {
         { x: -15, y: -8 - 24 * dotSpace },
         { x: -15, y: -8 - 25 * dotSpace },
         { x: -15, y: -8 - 26 * dotSpace },
-        { x: -15, y: -8 - 27 * dotSpace },
     )
 
     minutes5.push(
+        { x: -15, y: -8 - 28 * dotSpace },
         { x: -15, y: -8 - 29 * dotSpace },
         { x: -15, y: -8 - 30 * dotSpace },
         { x: -15, y: -8 - 31 * dotSpace },
         { x: -15, y: -8 - 32 * dotSpace },
-        { x: -15, y: -8 - 33 * dotSpace },
     )
 
     hours9.push(
+        { x: -15, y: -8 - 36 * dotSpace },
         { x: -15, y: -8 - 37 * dotSpace },
         { x: -15, y: -8 - 38 * dotSpace },
         { x: -15, y: -8 - 39 * dotSpace },
@@ -71,12 +71,11 @@ function setup() {
         { x: -15, y: -8 - 42 * dotSpace },
         { x: -15, y: -8 - 43 * dotSpace },
         { x: -15, y: -8 - 44 * dotSpace },
-        { x: -15, y: -8 - 45 * dotSpace },
     )
 
     hours2.push(
-        { x: -15, y: -8 - 47 * dotSpace },
-        { x: -15, y: -8 - 48 * dotSpace }
+        { x: -15, y: -8 - 46 * dotSpace },
+        { x: -15, y: -8 - 47 * dotSpace }
     )
 
 
@@ -137,49 +136,49 @@ function paintClock() {
 
     // Points
     push();
-    
+
     translate(width / 2, 0.88 * height);
     scale(0.9);
     strokeWeight(7);
     stroke('black');
-    seconds9.forEach( (p) => point(p.x, p.y));
-    seconds5.forEach( (p) => point(p.x, p.y));
-    minutes9.forEach( (p) => point(p.x, p.y));
-    minutes5.forEach( (p) => point(p.x, p.y));
-    hours9.forEach( (p) => point(p.x, p.y));
-    hours2.forEach( (p) => point(p.x, p.y));
+    seconds9.forEach((p) => point(p.x, p.y));
+    seconds5.forEach((p) => point(p.x, p.y));
+    minutes9.forEach((p) => point(p.x, p.y));
+    minutes5.forEach((p) => point(p.x, p.y));
+    hours9.forEach((p) => point(p.x, p.y));
+    hours2.forEach((p) => point(p.x, p.y));
     stroke('white');
     // seconds 9
-    for (let index = 0; index < sec % 10; index++) {
-        point(seconds9[index].x, seconds9[index].y);
+    for (let i = 1; i <= sec % 10; i++) {
+        point(seconds9[i - 1].x, seconds9[i - 1].y);
     }
     // seconds 5
-    for (let index = 0; index < Math.floor(sec / 10); index++) {
-        point(seconds5[index].x, seconds5[index].y);
+    for (let i = 1; i <= Math.floor(sec / 10); i++) {
+        point(seconds5[i - 1].x, seconds5[i - 1].y);
     }
     // minutes 9
-    for (let index = 0; index < min % 10; index++) {
-        point(minutes9[index].x, minutes9[index].y);
+    for (let i = 1; i <= min % 10; i++) {
+        point(minutes9[i - 1].x, minutes9[i - 1].y);
     }
     // minutes 5
-    for (let index = 0; index < Math.floor(min / 10); index++) {
-        point(minutes5[index].x, minutes5[index].y);
+    for (let i = 1; i <= Math.floor(min / 10); i++) {
+        point(minutes5[i - 1].x, minutes5[i - 1].y);
     }
     // hours 9
-    for (let index = 0; index <  hr % 10; index++) {
-        point(hours9[index].x, hours9[index].y);
+    for (let i = 1; i <= hr % 10; i++) {
+        point(hours9[i - 1].x, hours9[i - 1].y);
     }
     // hours 2
-    for (let index = 0; index < Math.floor(hr / 10); index++) {
-        point(hours2[index].x, hours2[index].y);
+    for (let i = 1; i <= Math.floor(hr / 10); i++) {
+        point(hours2[i - 1].x, hours2[i - 1].y);
     }
 
     let color = sec % 2 == 0 ? 'red' : 'black';
     stroke(color);
-    point(-35, -8 - 17 * dotSpace);
-    point(10, -8 - 17 * dotSpace);
-    point(-35, -8 - 35 * dotSpace);
-    point(10, -8 - 35 * dotSpace);
+    point(-35, -8 - 16 * dotSpace);
+    point(10, -8 - 16 * dotSpace);
+    point(-35, -8 - 34 * dotSpace);
+    point(10, -8 - 34 * dotSpace);
     pop();
 }
 
@@ -198,7 +197,7 @@ function paintSun() {
 function paintTower() {
     push();
     translate(width / 2, 0.88 * height);
-    fill(48, 48, 48, 255); 
+    fill(48, 48, 48, 255);
     beginShape();
     vertex(-55, 0)
     vertex(-50, -400)
