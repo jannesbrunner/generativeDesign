@@ -162,8 +162,8 @@ function draw() {
     push();
     colorMode(HSB);
     fill(360, 0, getSunlightB(hr) + 20);
-    ellipse(cloud1Pos, height / 4, 200, 50 * sin(angle - 0.01));
-    ellipse(cloud2Pos - 50, height / 5, 250 * sin(angle), 80);
+    makeCloud(cloud1Pos, 250);
+    makeCloud(cloud2Pos + 100, 300)
     pop()
 
     // Paint surface
@@ -183,9 +183,11 @@ function draw() {
     paintTower();
     paintClock();
 
-    cloud1Pos += 1;
-    cloud2Pos += 1.1;
+    cloud1Pos += 0.1;
+    cloud2Pos += 0.12;
     angle += 1;
+
+
     if (cloud1Pos > width) cloud1Pos = -50;
     if (cloud2Pos > width) cloud2Pos = -100;
 
@@ -272,6 +274,13 @@ function paintTower() {
     endShape();
     pop();
 }
+
+function makeCloud(cloudX, cloudY) {
+    noStroke();
+    ellipse(cloudX, cloudY, 70, 50);
+    ellipse(cloudX + 10, cloudY + 10, 70, 50);
+    ellipse(cloudX - 20, cloudY + 10, 70, 50);
+  }
 
 function oldWatch() {
     translate(width / 2, height / 2);
