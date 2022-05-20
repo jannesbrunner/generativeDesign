@@ -146,6 +146,24 @@ function getSunlightB(h) {
     }
 }
 
+// function getMoonlightB(h) {
+//     switch (h) {
+//         case 20: return 10;
+//         case 21: return 20; 
+//         case 22: return 30;
+//         case 23: return 40;
+//         case 0: return 55;
+//         case 24: return 55;
+//         case 1: return 60;
+//         case 2: return 55;
+//         case 3: return 50;
+//         case 4: return 45;
+//         case 5: return 40;
+//         case 6: return 35;                        
+//         default: return 10;
+//     }
+// }
+
 function draw() {
 
     let { hr, min, sec } = getTime();
@@ -154,8 +172,15 @@ function draw() {
 
     push();
     colorMode(HSB);
+    //if(hour > 6 && hour < 20 ) {
+    //    background(198, 100, getSunlightB(hr) + 10);
+    // }
+    // else {
+    //     background(198, 100, getMoonlightB(hr) + 10);
+    // }
     background(198, 100, getSunlightB(hr) + 10);
     pop()
+
 
     //Paint sun
     paintSun();
@@ -166,11 +191,26 @@ function draw() {
     makeCloud(cloud2Pos + 100, 300)
     pop()
 
+    // //Paint moon
+    // paintMoon();
+    // push();
+    // colorMode(HSB);
+    // fill(360, 0, getMoonlightB(hr) + 20);
+    // makeCloud(cloud1Pos, 250);
+    // makeCloud(cloud2Pos + 100, 300)
+    // pop()
+
     // Paint surface
     push();
     translate(0, 0.75 * height);
     colorMode(HSB);
-    fill(134, 100, getSunlightB(hr));
+    //let hour = getTime(hr)
+    // if(hour > 6 && hour < 20 ) {
+        fill(134, 100, getSunlightB(hr));
+    // }
+    // else {
+    //     fill(50, 50, getMoonlightB(hr));
+    // }
     beginShape();
     vertex(0, 0);
     vertex((width / 2), -20)
@@ -256,6 +296,19 @@ function paintSun() {
 
     
 }
+
+// function paintMoon() {
+//     let { hr } = getTime();
+//     let hrAngle = map(hr, 0, 23, -90, 260);
+//     push();
+//     rectMode(CENTER);
+//     colorMode(HSB)
+//     fill(getMoonlightB(hr) < 40 ? 40 : getMoonlightB(hr) , 100, 100);
+//     translate(width / 2, height / 1.5);
+//     rotate(hrAngle);
+//     ellipse(-320, 0, 100);
+//     pop();   
+// }
 
 function paintTower() {
     push();
