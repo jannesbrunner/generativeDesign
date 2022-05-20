@@ -1,8 +1,10 @@
 /// <reference path="./../p5.global-mode.d.ts" />
 let angle = 0.1;
 
-let cloud1Pos = -50;
-let cloud2Pos = -100;
+let cloud1Pos;
+let cloud2Pos;
+let cloud3Pos;
+let cloud4Pos;
 
 let isPlaying = true;
 let gui;
@@ -12,6 +14,7 @@ let useCustomTime = false;
 
 // misc
 const dotSpace = 9;
+let theAngle;
 
 // the clock points
 const seconds9 = [];
@@ -32,6 +35,11 @@ function keyReleased() {
 function setup() {
     createCanvas(windowWidth, windowHeight);
     angleMode(DEGREES);
+
+    cloud1Pos = random(-50, -300);
+    cloud2Pos = random(-100, -400);
+    cloud3Pos = random(-75, -250);
+    cloud4Pos = random(-230, -330);
 
     seconds9.push(
         { x: -15, y: -8 },
@@ -99,6 +107,9 @@ function setup() {
         console.log(customTime);
     });
     gui.addBoolean("Set Custom Time on Clock", useCustomTime, (val) => useCustomTime = val);
+    gui.addRange("Angle", -190, 360, theAngle, 1, (val) => {
+        theAngle = val;
+    })
 }
 
 const scaling = () => {
@@ -129,40 +140,40 @@ function getTime() {
 
 function getSunlightB(h) {
     switch (h) {
-        case 7: return 10;
-        case 8: return 20; 
-        case 9: return 30;
-        case 10: return 40;
+        case 7: return 20;
+        case 8: return 40;
+        case 9: return 45;
+        case 10: return 50;
         case 11: return 55;
         case 12: return 60;
-        case 13: return 55;
-        case 14: return 50;
-        case 15: return 45;
-        case 16: return 40;
-        case 17: return 35;
-        case 18: return 30;
-        case 19: return 20;                         
+        case 13: return 60;
+        case 14: return 60;
+        case 15: return 55;
+        case 16: return 45;
+        case 17: return 40;
+        case 18: return 35;
+        case 19: return 20;
         default: return 10;
     }
 }
 
-// function getMoonlightB(h) {
-//     switch (h) {
-//         case 20: return 10;
-//         case 21: return 20; 
-//         case 22: return 30;
-//         case 23: return 40;
-//         case 0: return 55;
-//         case 24: return 55;
-//         case 1: return 60;
-//         case 2: return 55;
-//         case 3: return 50;
-//         case 4: return 45;
-//         case 5: return 40;
-//         case 6: return 35;                        
-//         default: return 10;
-//     }
-// }
+function getMoonlightB(h) {
+    switch (h) {
+        case 0: return 55;
+        case 1: return 60;
+        case 2: return 55;
+        case 3: return 50;
+        case 4: return 45;
+        case 5: return 40;
+        case 6: return 35;
+        case 20: return 10;
+        case 21: return 20;
+        case 22: return 30;
+        case 23: return 40;
+        case 24: return 55;
+        default: return 10;
+    }
+}
 
 function draw() {
 
@@ -172,33 +183,29 @@ function draw() {
 
     push();
     colorMode(HSB);
-    //if(hour > 6 && hour < 20 ) {
-    //    background(198, 100, getSunlightB(hr) + 10);
-    // }
-    // else {
-    //     background(198, 100, getMoonlightB(hr) + 10);
-    // }
     background(198, 100, getSunlightB(hr) + 10);
     pop()
+
+    //Paint moon
+    paintMoon();
 
 
     //Paint sun
     paintSun();
+
+
+    // Paint Clouds
     push();
     colorMode(HSB);
     fill(360, 0, getSunlightB(hr) + 20);
     makeCloud(cloud1Pos, 250);
     makeCloud(cloud2Pos + 100, 300)
+    makeCloud(cloud3Pos, 250);
+    makeCloud(cloud4Pos, 150);
     pop()
 
-    // //Paint moon
-    // paintMoon();
-    // push();
-    // colorMode(HSB);
-    // fill(360, 0, getMoonlightB(hr) + 20);
-    // makeCloud(cloud1Pos, 250);
-    // makeCloud(cloud2Pos + 100, 300)
-    // pop()
+
+
 
     // Paint surface
     push();
@@ -206,7 +213,7 @@ function draw() {
     colorMode(HSB);
     //let hour = getTime(hr)
     // if(hour > 6 && hour < 20 ) {
-        fill(134, 100, getSunlightB(hr));
+    fill(134, 100, getSunlightB(hr));
     // }
     // else {
     //     fill(50, 50, getMoonlightB(hr));
@@ -225,11 +232,16 @@ function draw() {
 
     cloud1Pos += 0.1;
     cloud2Pos += 0.12;
+    cloud3Pos += 0.13;
+    cloud4Pos += 0.2;
     angle += 1;
 
 
     if (cloud1Pos > width) cloud1Pos = -50;
     if (cloud2Pos > width) cloud2Pos = -100;
+    if (cloud3Pos > width) cloud3Pos = -75;
+    if (cloud4Pos > width) cloud4Pos = -150;
+
 
 }
 
@@ -288,27 +300,37 @@ function paintSun() {
     push();
     rectMode(CENTER);
     colorMode(HSB)
-    fill(getSunlightB(hr) < 40 ? 40 : getSunlightB(hr) , 100, 100);
+    fill(getSunlightB(hr) < 40 ? 40 : getSunlightB(hr), 100, 100);
     translate(width / 2, height / 1.5);
     rotate(hrAngle);
     ellipse(-320, 0, 100);
     pop();
 
-    
+
 }
 
-// function paintMoon() {
-//     let { hr } = getTime();
-//     let hrAngle = map(hr, 0, 23, -90, 260);
-//     push();
-//     rectMode(CENTER);
-//     colorMode(HSB)
-//     fill(getMoonlightB(hr) < 40 ? 40 : getMoonlightB(hr) , 100, 100);
-//     translate(width / 2, height / 1.5);
-//     rotate(hrAngle);
-//     ellipse(-320, 0, 100);
-//     pop();   
-// }
+function paintMoon() {
+    let { hr } = getTime();
+    let hrAngle = 0
+
+    if (hr == 22 || hr == 23 || (hr > 0 && hr < 6)) {
+        push();
+        rectMode(CENTER);
+        translate(120, 80);
+        fill(225, 225, 255, getSunlightB(hr) + 20);
+        noStroke();
+        ellipse(50, 80, 125, 125);
+        colorMode(HSB);
+        fill(198, 100, getSunlightB(hr) + 10);
+        noStroke();
+        ellipse(80, 80, 125, 125);
+
+        pop();
+    }
+
+
+
+}
 
 function paintTower() {
     push();
@@ -333,7 +355,7 @@ function makeCloud(cloudX, cloudY) {
     ellipse(cloudX, cloudY, 70, 50);
     ellipse(cloudX + 10, cloudY + 10, 70, 50);
     ellipse(cloudX - 20, cloudY + 10, 70, 50);
-  }
+}
 
 function oldWatch() {
     translate(width / 2, height / 2);
