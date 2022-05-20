@@ -107,9 +107,6 @@ function setup() {
         console.log(customTime);
     });
     gui.addBoolean("Use Time Offset", useCustomTime, (val) => useCustomTime = val);
-    gui.addRange("Angle", -190, 360, theAngle, 1, (val) => {
-        theAngle = val;
-    })
 }
 
 const scaling = () => {
