@@ -102,11 +102,11 @@ function setup() {
     Toggle Gui:   <b>g</b><br/>
     `);
     gui.addText("Log", "");
-    gui.addTime("Custom Time", customTime, (val) => {
+    gui.addTime("Custom Offset", customTime, (val) => {
         customTime = val;
         console.log(customTime);
     });
-    gui.addBoolean("Set Custom Time on Clock", useCustomTime, (val) => useCustomTime = val);
+    gui.addBoolean("Use Time Offset", useCustomTime, (val) => useCustomTime = val);
     gui.addRange("Angle", -190, 360, theAngle, 1, (val) => {
         theAngle = val;
     })
@@ -124,9 +124,9 @@ function getTime() {
         const customHours = parseInt(hoursMinutes[0])
         const customMinutes = parseInt(hoursMinutes[1]);
         return {
-            hr: customHours,
-            min: customMinutes,
-            sec: 0,
+            hr: Math.floor((hour() + customHours + customMinutes/60)%24),
+            min: Math.floor(minute() + customMinutes),
+            sec: second(),
         }
 
     } else {
