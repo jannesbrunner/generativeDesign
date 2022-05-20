@@ -121,8 +121,8 @@ function getTime() {
         const customHours = parseInt(hoursMinutes[0])
         const customMinutes = parseInt(hoursMinutes[1]);
         return {
-            hr: Math.floor((hour() + customHours + customMinutes/60)%24),
-            min: Math.floor(minute() + customMinutes)%60,
+            hr: Math.trunc((hour() + customHours + (minute() / 60) + (customMinutes/60)))%24,
+            min: (minute() + customMinutes)%60,
             sec: second(),
         }
 
