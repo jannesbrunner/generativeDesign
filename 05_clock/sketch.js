@@ -310,7 +310,7 @@ function paintMoon() {
     let { hr } = getTime();
     let hrAngle = 0
 
-    if (hr == 22 || hr == 23 || (hr > 0 && hr < 6)) {
+    if (hr >= 18 || (hr >= 0 && hr < 7)) {
         push();
         rectMode(CENTER);
         translate(120, 80);
