@@ -1,6 +1,6 @@
 /// <reference path="./../p5.global-mode.d.ts" />
 
-var firework
+var fireworks = [];
 var gravity;
 
 let isPlaying = true;
@@ -20,7 +20,7 @@ function guiSetup() {
     Play Pause:   <b>Space</b><br/>
     Toggle Gui:   <b>g</b><br/>
     `);
-    gui.addText("Log", "");
+    gui.addText("Log", "⏵︎");
 }
 
 function setup() {
@@ -31,7 +31,9 @@ function setup() {
     stroke(255);
     strokeWeight(4);
     gravity = createVector(0, 0.2);
-    firework = new Particle(200,150);
+
+    colorMode(HSB);
+   
    
 }
 
@@ -39,10 +41,21 @@ function setup() {
 
 function draw() {
 
-    background(51);
-    firework.applyForce(gravity);
-    firework.update();
-    firework.show();
+    colorMode(RGB)
+    background(0, 0, 0, 25);
+    if (random(1) < 0.03) {
+        fireworks.push(new Firework());
+    }
+    
+    for (let i = fireworks.length-1; i > 0; i--) {
+        const element = fireworks[i];
+        element.update();
+        element.show();
+        if(element.done()) {
+            fireworks.splice(i, 1);
+        }
+        
+    }
    
 
 }
