@@ -1,18 +1,18 @@
 class Particle {
 
     constructor(x, y, hu, firework) {
-        this.pos = createVector(x, y)
+        this.pos = createVector(x, y, 0)
         this.firework = firework;
         this.lifespan = 255;
         this.hu = hu;
         if(this.firework) {
-            this.vel = createVector(0, random(-12, -8));
+            this.vel = createVector(0, random(-12, -8), 0);
         } else {
-            this.vel = p5.Vector.random2D();
+            this.vel = p5.Vector.random3D();
             this.vel.mult(random(1, 6))
         }
 
-        this.acc = createVector(0, 0);
+        this.acc = createVector(0, 0, 0);
     }
 
     applyForce = f => this.acc.add(f); 
@@ -41,7 +41,7 @@ class Particle {
             strokeWeight(4);
             stroke(this.hu, 255, 255)
         }
-        point(this.pos.x, this.pos.y);
+        point(this.pos.x, this.pos.y, this.pos.z);
     }
 
 }

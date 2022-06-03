@@ -1,7 +1,7 @@
 class Firework {
 
     constructor() {
-        this.firework = new Particle(random(width), height,this.hu, true);
+        this.firework = new Particle(random(width), height, this.hu, true);
         this.exploded = false;
         this.particles = []
         this.hu = random(255);
