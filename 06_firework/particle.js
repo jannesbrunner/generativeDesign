@@ -1,7 +1,7 @@
 class Particle {
 
-    constructor(x, y, hu, firework) {
-        this.pos = createVector(x, y, 0)
+    constructor(x, y, z, hu, firework) {
+        this.pos = createVector(x, y, z)
         this.firework = firework;
         this.lifespan = 255;
         this.hu = hu;
