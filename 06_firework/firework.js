@@ -34,6 +34,7 @@ class Firework {
         for (let i = 0; i < 100; i++) {
             let p = new Particle(this.firework.pos.x, this.firework.pos.y, this.firework.pos.z, this.hu, false)
             this.particles.push(p);
+            sound.play()
         }
     }
 

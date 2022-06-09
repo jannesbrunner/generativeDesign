@@ -28,6 +28,7 @@ let fireworkAmount = 0.03;
 function preload() {
     soundFormats('mp3', 'ogg');
     backgroundIMG = loadImage('./background.jpeg');
+    sound = loadSound('fireworks.mp3');
 }
 
 function keyReleased() {
