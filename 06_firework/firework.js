@@ -19,6 +19,7 @@ class Firework {
             if (this.firework.vel.y >= 0) {
                 this.exploded = true;
                 this.explode();
+                sound.play();
             }
         }
         for (let i = this.particles.length-1; i >= 0; i--) {
@@ -34,8 +35,8 @@ class Firework {
         for (let i = 0; i < 100; i++) {
             let p = new Particle(this.firework.pos.x, this.firework.pos.y, this.firework.pos.z, this.hu, false)
             this.particles.push(p);
-            sound.play()
         }
+        
     }
 
     show() {
@@ -46,7 +47,6 @@ class Firework {
         for (let i = 0; i < this.particles.length; i++) {
             const element = this.particles[i];
             element.show();
-            
         }
          
        
