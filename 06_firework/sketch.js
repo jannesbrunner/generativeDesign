@@ -24,6 +24,7 @@ let fireworkFly;
 let fireworkExplode;
 
 let fireworkAmount = 0.03;
+let playSound = false;
 
 function preload() {
     soundFormats('mp3', 'ogg');
@@ -42,7 +43,7 @@ function keyReleased() {
 
 
 function guiSetup() {
-    gui = QuickSettings.create(width, 20, "Settings");
+    gui = QuickSettings.create(width -200, 20, "Settings");
     gui.setKey("g");
     gui.addHTML("Info", `
     Play Pause:   <b>Space</b><br/>
@@ -50,6 +51,7 @@ function guiSetup() {
     `);
     gui.addText("Log", "⏵︎");
     gui.addRange("Fireworks", 0.01, 1, fireworkAmount, 0.01, (val) => fireworkAmount = val);
+    gui.addBoolean("Play sound", playSound, () => playSound = !playSound);       
 
 }
 
@@ -131,10 +133,10 @@ function draw() {
 
 
 
-    stroke(255);
-    fill(255, 102, 94);
-    rotateY(0.5);
-    box(85, 85);
+    // stroke(255);
+    // fill(255, 102, 94);
+    // rotateY(0.5);
+    // box(85, 85);
     if (random(1) < fireworkAmount) {
         fireworks.push(new Firework());
     }

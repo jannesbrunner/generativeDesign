@@ -1,8 +1,8 @@
 class Firework {
 
     constructor() {
-        this.firework = new Particle(random(width), height, random(200, 2000) , this.hu, true);
-//        this.fireworkHeart = new ParticleHeart(x, height, this.hu, true)
+        this.firework = new Particle(random(0, 2000), height, random(0, 2000) , this.hu, true);
+        // this.fireworkHeart = new ParticleHeart(x, height, this.hu, true)
         this.exploded = false;
         this.particles = []
         this.hu = random(255);
@@ -20,7 +20,7 @@ class Firework {
             if (this.firework.vel.y >= 0) {
                 this.exploded = true;
                 this.explode();
-                sound.play();
+                if(playSound) sound.play();
             }
         }
 

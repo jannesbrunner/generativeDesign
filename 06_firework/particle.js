@@ -6,7 +6,7 @@ class Particle {
         this.lifespan = 255;
         this.hu = hu;
         if(this.firework) {
-            this.vel = createVector(0, random(-12, -8), 0);
+            this.vel = createVector(random(-5, 5), random(-8, -10), random(-5, 5));
         } else {
             this.vel = p5.Vector.random3D();
             this.vel.mult(random(1, 6))
@@ -35,13 +35,19 @@ class Particle {
 
     show() {
         if(!this.firework) {
-            strokeWeight(2);
+            push();
+            strokeWeight(1);
             stroke(this.hu, 255, 255, this.lifespan);
+            point(this.pos.x, this.pos.y, this.pos.z);
+            pop();
         } else {
-            strokeWeight(4);
-            stroke(this.hu, 255, 255)
+            push();
+            strokeWeight(3);
+            stroke(56, 128, 255)
+            point(this.pos.x, this.pos.y, this.pos.z);
+            pop();
         }
-        point(this.pos.x, this.pos.y, this.pos.z);
+        
     }
 
 }
