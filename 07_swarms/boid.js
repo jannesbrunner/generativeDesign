@@ -1,11 +1,24 @@
 class Boid {
-    constructor( ) {
+    constructor(
+        maxSpeed = 4, 
+        alignForce = 0.5,
+        cohesionForce = 0.5,
+        separationForce = 0.3,
+        alignPerceptionRadius = 100,
+        cohesionPerceptionRadius = 100,
+        separationPerceptionRadius = 100 
+        ) {
         this.pos = createVector(random(width), random(height));
         this.vel = p5.Vector.random2D();
         this.vel.setMag(random(0.5, 1))
         this.acc = createVector();
-        this.maxForce = 1;
-        this.maxSpeed = 4;
+        this.maxSpeed = maxSpeed;
+        this.alignForce = alignForce,
+        this.cohesionForce = cohesionForce,
+        this.separationForce = separationForce,
+        this.alignPerceptionRadius = alignPerceptionRadius,
+        this.cohesionPerceptionRadius = cohesionPerceptionRadius,
+        this.separationPerceptionRadius = separationPerceptionRadius
     }
 
     edges() {
@@ -22,7 +35,7 @@ class Boid {
     }
 
     align(boids) {
-        let perceptionRadius = 50;
+        let perceptionRadius = this.alignPerceptionRadius;
         let steering = createVector();
         let total = 0;
         for(let other of boids) {
@@ -37,7 +50,7 @@ class Boid {
             steering.div(total);
             steering.setMag(this.maxSpeed);
             steering.sub(this.vel);
-            steering.limit(this.maxForce)
+            steering.limit(this.alignForce)
            
         }
         
@@ -46,7 +59,7 @@ class Boid {
     }
 
     cohesion(boids) {
-        let perceptionRadius = 100;
+        let perceptionRadius = this.cohesionPerceptionRadius;
         let steering = createVector();
         let total = 0;
         for(let other of boids) {
@@ -62,7 +75,7 @@ class Boid {
             steering.sub(this.pos)
             steering.setMag(this.maxSpeed);
             steering.sub(this.vel);
-            steering.limit(this.maxForce)
+            steering.limit(this.cohesionForce)
            
         }
         
@@ -71,7 +84,7 @@ class Boid {
     }
 
     separation(boids) {
-        let perceptionRadius = 50;
+        let perceptionRadius = this.separationPerceptionRadius;
         let steering = createVector();
         let total = 0;
         for(let other of boids) {
@@ -88,7 +101,7 @@ class Boid {
             steering.div(total);
             steering.setMag(this.maxSpeed);
             steering.sub(this.vel);
-            steering.limit(this.maxForce)
+            steering.limit(this.separationForce)
            
         }
         
