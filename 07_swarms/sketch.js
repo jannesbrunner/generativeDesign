@@ -3,6 +3,8 @@
 // settings
 let isPlaying = true;
 
+let tileMap;
+
 let boidsAmount = 50;
 let boidsConfig = {
     maxSpeed: 4,
@@ -56,17 +58,19 @@ function updateBoids(key, value) {
 
 function setup() {
 
+
+
     createCanvas(windowWidth, windowHeight);
     angleMode(DEGREES);
     guiSetup();
+    tileMap = new TileMap();
     for (let i = 0; i < boidsAmount; i++) {
-        flock.push(new Boid())
+        flock.push(new Boid());
     }
 }
 
 function adjustNoOfBoids(v) {
-    boidsAmount = v;
-    if(flock.length != boidsAmount) {
+
         let diff = boidsAmount - flock.length;
         if (diff > 0) {
             for (let i = 0; i < diff; i++) {
@@ -74,10 +78,10 @@ function adjustNoOfBoids(v) {
             }
         } else {
             for (let i = 0; i < diff * -1; i++) {
-                flock.pop();
+
+                tileMap.deletePoint(flock.pop());
             }
         }
-    }
 }
 
 
@@ -87,7 +91,7 @@ function draw() {
 
     for(let boid of flock) {
         boid.edges();
-        boid.flock(flock)
+        boid.flock()
         boid.update();
         boid.show();
     }
