@@ -5,7 +5,7 @@ let isPlaying = true;
 
 let tileMap;
 
-var ghostBlue, ghostGreen, ghostPink, ghostYellow, pacman;
+var bg, ghostBlue, ghostGreen, ghostPink, ghostYellow, pacman;
 
 let boidsAmount = 50;
 let boidsConfig = {
@@ -26,7 +26,8 @@ function preload() {
     ghostGreen = loadImage('images/ghostgreen.png');
     ghostPink = loadImage('images/ghostpink.png');
     ghostYellow = loadImage('images/ghostyellow.png');
-    pacman = loadImage('images/pacman.png')
+    pacman = loadImage('images/pacman.png');
+    bg = loadImage('images/background.png');
 }
 
 function keyReleased() {
@@ -76,7 +77,7 @@ function setup() {
 }
 
 function adjustNoOfBoids(v) {
-
+        boidsAmount = v;
         let diff = boidsAmount - flock.length;
         if (diff > 0) {
             for (let i = 0; i < diff; i++) {
@@ -94,18 +95,19 @@ function adjustNoOfBoids(v) {
 
 function draw() {
     //background(51);
+    image(bg, 0, 0, width, height);
     push();
     fill('grey')
     translate(0, windowHeight, 0);
-    image(background, 0, 0, 2000, 2000);
+   
     pop();
 
     for(let boid of flock) {
         boid.edges();
-        boid.flock()
+        //boid.flock()
         boid.update();
         boid.show();
     }
-    image(pacman, mouseX, mouseY, 60, 60); 
+    //image(pacman, mouseX, mouseY, 60, 60); 
 
 }

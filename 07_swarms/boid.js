@@ -129,8 +129,7 @@ class Boid {
     
     flock() {
 
-        let tile = tileMap.getTile(this)
-
+        let tile = tileMap.getTile(this);
         let alignment = this.align(tile);
         let cohesion = this.cohesion(tile);
         let separation = this.separation(tile);
@@ -149,11 +148,13 @@ class Boid {
 
     update() {
         this.lastPos = this.pos;
+        this.flock();
         this.pos.add(this.vel);
         this.vel.add(this.acc);
         this.vel.limit(this.maxSpeed);
-
+        
         tileMap.updatePoint(this)
+       
 
     }
 }
