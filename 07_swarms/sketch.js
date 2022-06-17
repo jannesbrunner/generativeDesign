@@ -5,6 +5,8 @@ let isPlaying = true;
 
 let tileMap;
 
+var ghostBlue, ghostGreen, ghostPink, ghostYellow, pacman;
+
 let boidsAmount = 50;
 let boidsConfig = {
     maxSpeed: 4,
@@ -20,7 +22,11 @@ let boidsConfig = {
 const flock = [];
 
 function preload() {
-
+    ghostBlue = loadImage('images/ghostblue.png');
+    ghostGreen = loadImage('images/ghostgreen.png');
+    ghostPink = loadImage('images/ghostpink.png');
+    ghostYellow = loadImage('images/ghostyellow.png');
+    pacman = loadImage('images/pacman.png')
 }
 
 function keyReleased() {
@@ -87,7 +93,12 @@ function adjustNoOfBoids(v) {
 
 
 function draw() {
-    background(51);
+    //background(51);
+    push();
+    fill('grey')
+    translate(0, windowHeight, 0);
+    image(background, 0, 0, 2000, 2000);
+    pop();
 
     for(let boid of flock) {
         boid.edges();
@@ -95,6 +106,6 @@ function draw() {
         boid.update();
         boid.show();
     }
-
+    image(pacman, mouseX, mouseY, 60, 60); 
 
 }
