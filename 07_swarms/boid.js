@@ -6,8 +6,9 @@ class Boid {
         separationForce = 0.3,
         alignPerceptionRadius = 100,
         cohesionPerceptionRadius = 100,
-        separationPerceptionRadius = 100 
+        separationPerceptionRadius = 100,
         ) {
+        this.ghost = ghosts[Math.floor(random(0, 4))];    
         this.lastPos = createVector();     
         this.pos = createVector(random(width), random(height));
         this.vel = p5.Vector.random2D();
@@ -20,6 +21,9 @@ class Boid {
         this.alignPerceptionRadius = alignPerceptionRadius,
         this.cohesionPerceptionRadius = cohesionPerceptionRadius,
         this.separationPerceptionRadius = separationPerceptionRadius
+        this.id = + new Date();
+
+        this.dead = false;
 
         tileMap.updatePoint(this);
     }
@@ -37,10 +41,27 @@ class Boid {
         }
     }
 
+    kill() {
+        let perceptionRadius = 50;
+        if(pacman.isEating) {
+            let d = dist(pacman.posX, pacman.posY, this.pos.x, this.pos.y)
+            if(d < perceptionRadius) {
+                const index = flock.findIndex( boid => boid.id === this.id);
+                if(index != -1) {
+                    tileMap.deletePoint(flock[index]);
+                    const boid = flock.splice(index, 1)
+                    boidsAmount -= 1;
+                    gui.setValue("Amount", boidsAmount);
+                    adjustNoOfBoids(flock.length)
+                }
+            }
+        }
+    }
+
     shark() {
         let perceptionRadius = 100;
         let steering = createVector();
-        let d = dist(mouseX, mouseY, this.pos.x, this.pos.y)
+        let d = dist(pacman.posX, pacman.posY, this.pos.x, this.pos.y)
         if(d < perceptionRadius) {
             let diff = p5.Vector.sub(this.pos, createVector(mouseX, mouseY));
             diff.div(d);
@@ -128,7 +149,7 @@ class Boid {
 
     
     flock() {
-
+        this.kill();
         let tile = tileMap.getTile(this);
         let alignment = this.align(tile);
         let cohesion = this.cohesion(tile);
@@ -143,18 +164,17 @@ class Boid {
     show() {
         strokeWeight(8);
         stroke(255);
-        point(this.pos.x, this.pos.y)
+        image(this.ghost, this.pos.x, this.pos.y, 10, 10);
+        //point(this.pos.x, this.pos.y)
     }
 
     update() {
+        
         this.lastPos = this.pos;
         this.flock();
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.vel.limit(this.maxSpeed);
-        
-        tileMap.updatePoint(this)
-       
-
+        this.vel.limit(this.maxSpeed);  
+        tileMap.updatePoint(this)       
     }
 }
