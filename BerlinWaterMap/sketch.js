@@ -63,13 +63,13 @@ function guiSetup() {
     Play Pause:   <b>p</b><br/>
     Toggle Gui:   <b>g</b><br/>
     `);
-   
     settingsGui.addText("Log", "⏵︎");
     settingsGui.addBoolean("Show Edge Flow Field", settings.showEdgeField, () => {
         settings.showEdgeField = !settings.showEdgeField;
     });
 
     gameGui = QuickSettings.create(20, 600, "Ship Information System");
+    gameGui.addProgressBar("No of Ships", assets.boatNames.length, assets.boatNames.length - availableBoatNames.length, "");
 }
 
 
@@ -118,6 +118,9 @@ function checkWithinWater(x, y) {
 function setup() {
     createCanvas(1500, 1000);
     angleMode(DEGREES);
+
+    availableBoatNames = [...assets.boatNames];
+
     guiSetup();
 
     // rastering the flowField
@@ -131,7 +134,7 @@ function setup() {
     constructEdgeField();
     drawEdgeField();
 
-    availableBoatNames = [...assets.boatNames];
+    
 
 
 }
@@ -208,6 +211,7 @@ function updateGameGui(selected=null) {
         }
     }); 
     gameGui.addHTML("Info", ``);
+    gameGui.setValue("No of Ships", assets.boatNames.length - availableBoatNames.length);
 }
 
 
