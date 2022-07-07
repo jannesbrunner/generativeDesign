@@ -4,7 +4,8 @@
 const scl = 3;
 let cols, rows;
 
-let flowField;
+let edgeField;
+let edgeFieldBuffer;
 let xDirection;
 let yDirection;
 
@@ -12,14 +13,14 @@ let yDirection;
 let gui;
 const settings = {
     isPlaying: true,
-    showFlowField: true,
+    showEdgeField: false,
 }
 
 const assets = {}
 function preload() {
-   assets.waterMap = loadImage("./assets/map.PNG",)
-   xDirection = loadImage("./assets/xdirection.png",)
-   yDirection = loadImage("./assets/ydirection.png",)
+    assets.waterMap = loadImage("./assets/map.png",)
+    xDirection = loadImage("./assets/xdirection.png",)
+    yDirection = loadImage("./assets/ydirection.png",)
 }
 
 
@@ -41,11 +42,44 @@ function guiSetup() {
     Toggle Gui:   <b>g</b><br/>
     `);
     gui.addText("Log", "⏵︎");
+    gui.addBoolean("Show Edge Flow Field", settings.showEdgeField, () => {
+        settings.showEdgeField = !settings.showEdgeField;
+    });
+}
+
+function constructEdgeField() {
+    edgeField = new Array(cols * rows);
+    // load x and y direction edge detection image
+    xDirection.loadPixels();
+    yDirection.loadPixels();
+
+    let xDpixels = xDirection.pixels.filter((v, i) => i % 4 == 0);
+    let yDpixels = yDirection.pixels.filter((v, i) => i % 4 == 0);
+
+
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            let index = x + y * cols;
+
+
+            // y*scl*width + x*scl
+
+            // Edge detection
+            let xDirR = xDpixels[y * scl * width + x * scl] / 255 - 0.5;
+            let yDirR = yDpixels[y * scl * width + x * scl] / 255 - 0.5;
+
+            let angle = 90;
+            // let v = p5.Vector.fromAngle(angle);
+            //v.setMag(1);
+            let v_edge = createVector(xDirR, yDirR);
+            edgeField[index] = v_edge;
+        }
+    }
 }
 
 
 function setup() {
-    createCanvas(1000, 1000);
+    createCanvas(1500, 1000);
     angleMode(DEGREES);
     guiSetup();
 
@@ -53,79 +87,41 @@ function setup() {
     cols = floor(width / scl);
     rows = floor(height / scl);
 
-    flowField = new Array(cols * rows);
+    constructEdgeField();
+    drawEdgeField();
 
 
-    // load x and y direction edge detection image
-    xDirection.loadPixels();
-    yDirection.loadPixels();
-
-    let xDpixels = xDirection.pixels.filter( (v, i) => i % 4 == 0);
-    let yDpixels = yDirection.pixels.filter( (v, i) => i % 4 == 0);
-
-
-
-
-    for(let y = 0; y < rows; y++) {
-        for(let x = 0; x < cols; x++) {
-          let index = x + y * cols;
-          
-          
-          // y*scl*width + x*scl
-
-          // Edge detection
-          let xDirR = xDpixels[y*scl*width + x*scl] / 255 - 0.5;
-          let yDirR = yDpixels[y*scl*width + x*scl] / 255 - 0.5;
-
-          let angle = 90;
-          // let v = p5.Vector.fromAngle(angle);
-          //v.setMag(1);
-          let v_edge = createVector(xDirR, yDirR);
-          flowField[index] = v_edge;
-        }
-      }
-
-    
 }
 
-// shows the flowField if desired
-function drawFlowField() {
+// shows the Edge flowField if desired
+function drawEdgeField() {
 
-    flowField.forEach((v, i) => {
-        stroke("red");
-        push();
+    edgeFieldBuffer = createGraphics(1500, 1000);
+
+    edgeField.forEach((v, i) => {
+        edgeFieldBuffer.stroke("red");
+        edgeFieldBuffer.push();
         let x = i % cols * scl;
         let y = floor(i / cols) * scl;
-        translate(x , y);
+        edgeFieldBuffer.translate(x, y);
         //rotate(v.heading());
-        strokeWeight(1);
-        line(0, 0, v.x*10, v.y*10);
-        stroke("blue")
-        point(v.x*10, v.y*10);
-        pop();
+        edgeFieldBuffer.strokeWeight(1);
+        edgeFieldBuffer.line(0, 0, v.x * 10, v.y * 10);
+        edgeFieldBuffer.stroke("blue")
+        edgeFieldBuffer.point(v.x * 10, v.y * 10);
+        edgeFieldBuffer.pop();
     })
 
-  }
+}
 
 
 function draw() {
-    noLoop();
-    mainScreen();
-    image(xDirection,0, 0, xDirection.width , xDirection.height);
-    if (settings.showFlowField) {
-        drawFlowField();
-      }
+   
+    image(assets.waterMap, 0, 0, assets.waterMap.width, assets.waterMap.height);
+    if (settings.showEdgeField) {
+       image(edgeFieldBuffer, 0, 0);
+    }
 }
 
-// Screens
-function mainScreen() {
-    textSize(32);
-    textAlign(CENTER);
-    background(0);
-    /* push();
-    imageMode(CENTER)
-    image(assets.waterMap, width/2, height/2, assets.waterMap.width , assets.waterMap.height); // TODO: make this responsive
-    pop(); */
-}
 
 
