@@ -1,13 +1,14 @@
 /// <reference path="./../p5.global-mode.d.ts" />
 
 
-const scl = 3;
+const scl = 10;
 let cols, rows;
 
 let edgeField;
 let edgeFieldBuffer;
 let xDirection;
 let yDirection;
+let waterMask;
 
 // settings
 let gui;
@@ -21,6 +22,7 @@ function preload() {
     assets.waterMap = loadImage("./assets/mapRef.png",)
     xDirection = loadImage("./assets/xdirection.png",)
     yDirection = loadImage("./assets/ydirection.png",)
+    waterMask = loadImage("./assets/waterBorders.png",)
 }
 
 let ships = [];
@@ -49,6 +51,7 @@ function guiSetup() {
     });
 }
 
+
 function constructEdgeField() {
     edgeField = new Array(cols * rows);
     // load x and y direction edge detection image
@@ -73,15 +76,22 @@ function constructEdgeField() {
             let angle = 90;
             // let v = p5.Vector.fromAngle(angle);
             //v.setMag(1);
-            if(xDirR < 0.005 && xDirR > -0.005 && yDirR < 0.005 && yDirR > -0.005) {
+            if (xDirR < 0.005 && xDirR > -0.005 && yDirR < 0.005 && yDirR > -0.005) {
                 xDirR = 0;
                 yDirR = 0;
             }
             let v_edge = createVector(xDirR, yDirR);
             edgeField[index] = v_edge;
+
+
         }
     }
 }
+
+function checkWithinWater(x, y) {
+    return waterMask.pixels[x + y * width] !== 0;
+}
+
 
 
 function setup() {
@@ -92,6 +102,10 @@ function setup() {
     // rastering the flowField
     cols = floor(width / scl);
     rows = floor(height / scl);
+
+    // prepare water S/W pixels array
+    waterMask.loadPixels();
+    waterMask.pixels = waterMask.pixels.filter((v, i) => i % 4 == 0);
 
     constructEdgeField();
     drawEdgeField();
@@ -122,10 +136,10 @@ function drawEdgeField() {
 
 
 function draw() {
-   
+
     image(assets.waterMap, 0, 0, assets.waterMap.width, assets.waterMap.height);
     if (settings.showEdgeField) {
-       image(edgeFieldBuffer, 0, 0);
+        image(edgeFieldBuffer, 0, 0);
     }
 
     if (ships.length > 0) {
@@ -133,15 +147,19 @@ function draw() {
             particle.follow(edgeField)
             particle.update();
             particle.edges();
-            particle.show();  
-          });
+            particle.show();
+        });
     }
-    
+
+
 }
 
-function mouseClicked() {
-    ships.push(new Ship(mouseX, mouseY));
+function mouseClicked() { // Spawn Ships in water
+    if (mouseButton === LEFT && checkWithinWater(mouseX, mouseY)) {
+        ships.push(new Ship(mouseX, mouseY));
+    }
 }
+
 
 
 
