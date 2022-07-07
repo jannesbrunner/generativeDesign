@@ -18,10 +18,12 @@ const settings = {
 
 const assets = {}
 function preload() {
-    assets.waterMap = loadImage("./assets/map.png",)
+    assets.waterMap = loadImage("./assets/mapRef.png",)
     xDirection = loadImage("./assets/xdirection.png",)
     yDirection = loadImage("./assets/ydirection.png",)
 }
+
+let ships = [];
 
 
 
@@ -71,6 +73,10 @@ function constructEdgeField() {
             let angle = 90;
             // let v = p5.Vector.fromAngle(angle);
             //v.setMag(1);
+            if(xDirR < 0.005 && xDirR > -0.005 && yDirR < 0.005 && yDirR > -0.005) {
+                xDirR = 0;
+                yDirR = 0;
+            }
             let v_edge = createVector(xDirR, yDirR);
             edgeField[index] = v_edge;
         }
@@ -121,6 +127,20 @@ function draw() {
     if (settings.showEdgeField) {
        image(edgeFieldBuffer, 0, 0);
     }
+
+    if (ships.length > 0) {
+        ships.forEach(particle => {
+            particle.follow(edgeField)
+            particle.update();
+            particle.edges();
+            particle.show();  
+          });
+    }
+    
+}
+
+function mouseClicked() {
+    ships.push(new Ship(mouseX, mouseY));
 }
 
 
