@@ -4,6 +4,10 @@ class Ship {
         this.vel = createVector(random(-1, 1),random(-1, 1));
         this.acc = createVector(0,0);
         this.maxspeed = 0.5;
+        const nameIndex = random(0, availableBoatNames.length).toFixed(0);
+        this.name = availableBoatNames[nameIndex];
+        // remove the name from the array so it can't be used again
+        availableBoatNames.splice(nameIndex, 1);
     }
 
     update() {
@@ -41,9 +45,19 @@ class Ship {
     }
 
     show() {
-        stroke("red");
+        push();
+        if(dist(this.pos.x, this.pos.y, mouseX, mouseY) < 10) {
+            currentBoat = this;
+            updateGameGui(currentBoat.name);
+        }
+       
+        stroke(currentBoat === this? "red" : "black");
+
+       
         strokeWeight(10);
         point(this.pos.x, this.pos.y)
+        pop();
+       
     } 
 }
 

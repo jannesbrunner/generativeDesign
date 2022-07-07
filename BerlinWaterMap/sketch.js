@@ -10,16 +10,24 @@ let xDirection;
 let yDirection;
 let waterMask;
 
+let currentBoat = null;
+let availableBoatNames;
+let currentBoatNames = [];
+
+const assets = {}
+
 // settings
-let gui;
+let settingsGui;
+let gameGui;
 const settings = {
     isPlaying: true,
     showEdgeField: false,
 }
 
-const assets = {}
+
 function preload() {
     assets.waterMap = loadImage("./assets/mapRef.png",)
+    assets.boatNames = loadStrings("./assets/boatNames.txt");
     xDirection = loadImage("./assets/xdirection.png",)
     yDirection = loadImage("./assets/ydirection.png",)
     waterMask = loadImage("./assets/waterBorders.png",)
@@ -33,22 +41,35 @@ function keyReleased() {
     if (key === "p") {
         settings.isPlaying = !settings.isPlaying;
         settings.isPlaying ? loop() : noLoop();
-        gui.setValue("Log", settings.isPlaying ? "⏵︎" : "⏸︎");
+        settingsGui.setValue("Log", settings.isPlaying ? "⏵︎" : "⏸︎");
     }
 }
 
+function currentBoatInfo () { 
+    if (currentBoat) {
+        gameGui.setValue("Info", `
+        Name: <strong>${currentBoat.name}</strong><br/>
+        Position X: ${currentBoat.pos.x.toFixed(2)} Y: ${currentBoat.pos.y.toFixed(2)}<br/>
+        Velocity: ${currentBoat.vel.x.toFixed(2)}, ${currentBoat.vel.y.toFixed(2)}<br/>
+        Acceleration: ${currentBoat.acc.x.toFixed(2)}, ${currentBoat.acc.y.toFixed(2)}<br/>
+        `);
+    }
+}
 
 function guiSetup() {
-    gui = QuickSettings.create(width, 20, "Settings");
-    gui.setKey("g");
-    gui.addHTML("Info", `
+    settingsGui = QuickSettings.create(width, 20, "Settings");
+    settingsGui.setKey("g");
+    settingsGui.addHTML("Info", `
     Play Pause:   <b>p</b><br/>
     Toggle Gui:   <b>g</b><br/>
     `);
-    gui.addText("Log", "⏵︎");
-    gui.addBoolean("Show Edge Flow Field", settings.showEdgeField, () => {
+   
+    settingsGui.addText("Log", "⏵︎");
+    settingsGui.addBoolean("Show Edge Flow Field", settings.showEdgeField, () => {
         settings.showEdgeField = !settings.showEdgeField;
     });
+
+    gameGui = QuickSettings.create(20, 600, "Ship Information System");
 }
 
 
@@ -110,6 +131,8 @@ function setup() {
     constructEdgeField();
     drawEdgeField();
 
+    availableBoatNames = [...assets.boatNames];
+
 
 }
 
@@ -151,13 +174,40 @@ function draw() {
         });
     }
 
+    currentBoatInfo();
+
 
 }
 
 function mouseClicked() { // Spawn Ships in water
-    if (mouseButton === LEFT && checkWithinWater(mouseX, mouseY)) {
+    if (mouseButton === LEFT && checkWithinWater(mouseX, mouseY) && availableBoatNames.length > 0) {
         ships.push(new Ship(mouseX, mouseY));
+        updateGameGui();
     }
+}
+
+function updateGameGui(selected=null) {
+    let currentBoats = [];
+    if (selected) {
+        ships.filter(s => s.name !== selected).forEach(s => currentBoats.push(s.name));
+        currentBoats.unshift(selected);
+    } else {
+        ships.forEach(s => {
+            currentBoats.unshift(s.name);
+        })
+    }
+     // WORKAROUND
+     if(ships.length >= 1)  {
+        gameGui.removeControl("Info");
+        gameGui.removeControl("Selected Boat")}
+    // END WORKAROUND
+    gameGui.addDropDown("Selected Boat", currentBoats, ({value}) => {
+        newShip = ships.find(s => s.name === value);
+        if(newShip) {
+            currentBoat = newShip;
+        }
+    }); 
+    gameGui.addHTML("Info", ``);
 }
 
 
