@@ -10,9 +10,9 @@ class Ship {
         availableBoatNames.splice(nameIndex, 1);
     }
 
-    update() {
+    update(ships) {
 
-        this.acc.add(this.separation());
+        this.acc.add(this.separation(ships));
 
         this.vel.add(this.acc);
         this.pos.add(this.vel);
@@ -21,7 +21,7 @@ class Ship {
     }
 
     applyForce(force) {
-        this.acc.add(force)
+        this.acc.add(force.mult(0.5))
     }
 
     // Follow a flow field (vector field)
