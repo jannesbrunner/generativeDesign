@@ -1,8 +1,8 @@
 class Ship {
     constructor(posX, posY) {
         this.pos = createVector(posX, posY);
-        this.vel = createVector(random(-1, 1),random(-1, 1));
-        this.acc = createVector(0,0);
+        this.vel = createVector(random(-1, 1), random(-1, 1));
+        this.acc = createVector(0, 0);
         this.maxspeed = 0.5;
         const nameIndex = random(0, availableBoatNames.length).toFixed(0);
         this.name = availableBoatNames[nameIndex];
@@ -46,18 +46,25 @@ class Ship {
 
     show() {
         push();
-        if(dist(this.pos.x, this.pos.y, mouseX, mouseY) < 10) {
+        if (dist(this.pos.x, this.pos.y, mouseX, mouseY) < 10) {
             currentBoat = this;
             updateGameGui(currentBoat.name);
         }
-       
-        stroke(currentBoat === this? "red" : "black");
 
-       
-        strokeWeight(10);
-        point(this.pos.x, this.pos.y)
+        
+
+        translate(this.pos.x, this.pos.y);
+        imageMode(CENTER)
+        rotate(this.vel.heading());
+        image(assets.yacht, 0, 0, assets.yacht.width * 0.03, assets.yacht.height * 0.03);
         pop();
-       
-    } 
+
+        if (currentBoat === this) {
+            stroke(currentBoat === this ? "red" : "black");
+            strokeWeight(10);
+            point(this.pos.x, this.pos.y)
+        }
+
+    }
 }
 

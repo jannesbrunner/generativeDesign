@@ -28,6 +28,8 @@ const settings = {
 function preload() {
     assets.waterMap = loadImage("./assets/mapRef.png",)
     assets.boatNames = loadStrings("./assets/boatNames.txt");
+    assets.yacht = loadImage('./assets/ships/yacht.png');
+    assets.sailboat = loadImage('./assets/ships/sailboat.png');
     xDirection = loadImage("./assets/xdirection.png",)
     yDirection = loadImage("./assets/ydirection.png",)
     waterMask = loadImage("./assets/waterBorders.png",)
@@ -110,7 +112,7 @@ function constructEdgeField() {
 }
 
 function checkWithinWater(x, y) {
-    return waterMask.pixels[x + y * width] !== 0;
+    return (waterMask.pixels[x + y * width] !== 0 && x < width && y < height);
 }
 
 
@@ -181,6 +183,8 @@ function draw() {
 
 
 }
+
+
 
 function mouseClicked() { // Spawn Ships in water
     if (mouseButton === LEFT && checkWithinWater(mouseX, mouseY) && availableBoatNames.length > 0) {
