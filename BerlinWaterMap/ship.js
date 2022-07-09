@@ -11,6 +11,9 @@ class Ship {
     }
 
     update() {
+
+        this.acc.add(this.separation());
+
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.vel.limit(this.maxspeed);
@@ -21,12 +24,41 @@ class Ship {
         this.acc.add(force)
     }
 
+    // Follow a flow field (vector field)
     follow(vectors) {
         let x = floor(this.pos.x / scl);
         let y = floor(this.pos.y / scl);
         const index = x + y * cols;
         let force = vectors[index];
         this.applyForce(force);
+    }
+
+    // Separate from other ships
+    separation(ships) {
+        let perceptionRadius = 100
+        let steering = createVector();
+        let total = 0;
+        // For each ship in the system, check if it's too close
+        // Can be optimized maybe with QuadTree
+        for(let other of ships) {
+            let d = dist(this.pos.x, this.pos.y, other.pos.x, other.pos.y)
+            if(other != this && d < perceptionRadius) {
+                let diff = p5.Vector.sub(this.pos, other.pos);
+                diff.div(d);
+                steering.add(diff);
+                total++;
+            }
+           
+        }
+        if(total > 0) {
+            steering.div(total);
+            steering.setMag(this.maxSpeed);
+            steering.sub(this.vel);
+            steering.limit(1)
+        }
+        
+        return steering;
+
     }
 
     edges() {

@@ -173,7 +173,7 @@ function draw() {
     if (ships.length > 0) {
         ships.forEach(particle => {
             particle.follow(edgeField)
-            particle.update();
+            particle.update(ships);
             particle.edges();
             particle.show();
         });
