@@ -6,8 +6,6 @@ let cols, rows;
 
 let edgeField;
 let edgeFieldBuffer;
-let xDirection;
-let yDirection;
 let waterMask;
 let normalMap;
 
@@ -27,7 +25,7 @@ const settings = {
 
 
 function preload() {
-    assets.waterMap = loadImage("./assets/mapRef.png",)
+    assets.waterMap = loadImage("./assets/map.png",)
     assets.boatNames = loadStrings("./assets/boatNames.txt");
     assets.yacht = loadImage('./assets/ships/yacht.png');
     assets.sailboat = loadImage('./assets/ships/sailboat.png');
@@ -138,7 +136,7 @@ function checkWithinWater(x, y) {
 
 
 function setup() {
-    createCanvas(1500, 1000);
+    createCanvas(3000, 2170);
     angleMode(DEGREES);
 
     availableBoatNames = [...assets.boatNames];
