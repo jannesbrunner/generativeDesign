@@ -9,6 +9,7 @@ let edgeFieldBuffer;
 let xDirection;
 let yDirection;
 let waterMask;
+let normalMap;
 
 let currentBoat = null;
 let availableBoatNames;
@@ -33,6 +34,7 @@ function preload() {
     xDirection = loadImage("./assets/xdirection.png",)
     yDirection = loadImage("./assets/ydirection.png",)
     waterMask = loadImage("./assets/waterBorders.png",)
+    normalMap = loadImage("./assets/normalMap.png",)
 }
 
 let ships = [];
@@ -47,7 +49,7 @@ function keyReleased() {
     }
 }
 
-function currentBoatInfo () { 
+function currentBoatInfo() {
     if (currentBoat) {
         gameGui.setValue("Info", `
         Name: <strong>${currentBoat.name}</strong><br/>
@@ -72,8 +74,26 @@ function guiSetup() {
 
     gameGui = QuickSettings.create(20, 600, "Ship Information System");
     gameGui.addProgressBar("No of Ships", assets.boatNames.length, assets.boatNames.length - availableBoatNames.length, "");
+
 }
 
+function getDirectionForce(x, y) {
+    // get the index of the current pixel in p5.Image 
+    let index = (x + y * width) * 4;
+    // get the vector of the current pixel
+    let r = normalMap.pixels[index]; // red channel of the pixel
+    let g = normalMap.pixels[index + 1]; // green channel of the pixel
+
+    let force_x = map(r, 0, 255, -1, 1);
+    let force_y = map(g, 0, 255, -1, 1);
+
+    if (force_x < 0.005 && force_x > -0.005 && force_y < 0.005 && force_y > -0.005) {
+        force_x = 0;
+        force_y = 0;
+    }
+
+    return createVector(force_x, force_y);
+}
 
 function constructEdgeField() {
     edgeField = new Array(cols * rows);
@@ -133,10 +153,12 @@ function setup() {
     waterMask.loadPixels();
     waterMask.pixels = waterMask.pixels.filter((v, i) => i % 4 == 0);
 
+    normalMap.loadPixels();
+
     constructEdgeField();
     drawEdgeField();
 
-    
+
 
 
 }
@@ -146,7 +168,22 @@ function drawEdgeField() {
 
     edgeFieldBuffer = createGraphics(1500, 1000);
 
-    edgeField.forEach((v, i) => {
+    for (let y = 0; y < 1000; y=y+5) {
+        for (let x = 0; x < 1500; x=x+5) {
+            edgeFieldBuffer.stroke("red");
+            edgeFieldBuffer.push();
+            edgeFieldBuffer.translate(x, y);
+            edgeFieldBuffer.strokeWeight(1);
+            let force = getDirectionForce(x, y);
+            edgeFieldBuffer.line(0, 0, force.x * 10, force.y * 10);
+            edgeFieldBuffer.stroke("blue")
+            edgeFieldBuffer.point(force.x * 10, force.y * 10);
+            edgeFieldBuffer.pop();
+        }
+    }
+
+
+    /* edgeField.forEach((v, i) => {
         edgeFieldBuffer.stroke("red");
         edgeFieldBuffer.push();
         let x = i % cols * scl;
@@ -158,7 +195,7 @@ function drawEdgeField() {
         edgeFieldBuffer.stroke("blue")
         edgeFieldBuffer.point(v.x * 10, v.y * 10);
         edgeFieldBuffer.pop();
-    })
+    }) */
 
 }
 
@@ -172,7 +209,7 @@ function draw() {
 
     if (ships.length > 0) {
         ships.forEach(particle => {
-            particle.follow(edgeField)
+            particle.follow();
             particle.update(ships);
             particle.edges();
             particle.show();
@@ -193,7 +230,7 @@ function mouseClicked() { // Spawn Ships in water
     }
 }
 
-function updateGameGui(selected=null) {
+function updateGameGui(selected = null) {
     let currentBoats = [];
     if (selected) {
         ships.filter(s => s.name !== selected).forEach(s => currentBoats.push(s.name));
@@ -203,17 +240,18 @@ function updateGameGui(selected=null) {
             currentBoats.unshift(s.name);
         })
     }
-     // WORKAROUND
-     if(ships.length >= 1)  {
+    // WORKAROUND
+    if (ships.length >= 1) {
         gameGui.removeControl("Info");
-        gameGui.removeControl("Selected Boat")}
+        gameGui.removeControl("Selected Boat")
+    }
     // END WORKAROUND
-    gameGui.addDropDown("Selected Boat", currentBoats, ({value}) => {
+    gameGui.addDropDown("Selected Boat", currentBoats, ({ value }) => {
         newShip = ships.find(s => s.name === value);
-        if(newShip) {
+        if (newShip) {
             currentBoat = newShip;
         }
-    }); 
+    });
     gameGui.addHTML("Info", ``);
     gameGui.setValue("No of Ships", assets.boatNames.length - availableBoatNames.length);
 }
