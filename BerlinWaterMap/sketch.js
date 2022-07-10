@@ -34,7 +34,7 @@ function preload() {
     xDirection = loadImage("./assets/xdirection.png",)
     yDirection = loadImage("./assets/ydirection.png",)
     waterMask = loadImage("./assets/waterBorders.png",)
-    normalMap = loadImage("./assets/normalMap.png",)
+    normalMap = loadImage("./assets/normalmap_with_route.png",)
 }
 
 let ships = [];
