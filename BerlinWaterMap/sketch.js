@@ -29,10 +29,8 @@ function preload() {
     assets.boatNames = loadStrings("./assets/boatNames.txt");
     assets.yacht = loadImage('./assets/ships/yacht.png');
     assets.sailboat = loadImage('./assets/ships/sailboat.png');
-    xDirection = loadImage("./assets/xdirection.png",)
-    yDirection = loadImage("./assets/ydirection.png",)
-    waterMask = loadImage("./assets/waterBorders.png",)
-    normalMap = loadImage("./assets/normalmap_with_route.png",)
+    waterMask = loadImage("./assets/map_sw_trim.png",)
+    normalMap = loadImage("./assets/normalmap.png",)
 }
 
 let ships = [];
@@ -51,8 +49,9 @@ function currentBoatInfo() {
     if (currentBoat) {
         gameGui.setValue("Info", `
         Name: <strong>${currentBoat.name}</strong><br/>
-        Position X: ${currentBoat.pos.x.toFixed(2)} Y: ${currentBoat.pos.y.toFixed(2)}<br/>
-        Velocity: ${currentBoat.vel.x.toFixed(2)}, ${currentBoat.vel.y.toFixed(2)}<br/>
+        Position X: ${currentBoat.pos.x.toFixed(0)} Y: ${currentBoat.pos.y.toFixed(0)}<br/>
+        Course: ${currentBoat.vel.heading().toFixed(2)} °<br/>
+        Speed: ${currentBoat.vel.mag().toFixed(2)}<br/>
         Acceleration: ${currentBoat.acc.x.toFixed(2)}, ${currentBoat.acc.y.toFixed(2)}<br/>
         `);
     }
@@ -93,42 +92,6 @@ function getDirectionForce(x, y) {
     return createVector(force_x, force_y);
 }
 
-function constructEdgeField() {
-    edgeField = new Array(cols * rows);
-    // load x and y direction edge detection image
-    xDirection.loadPixels();
-    yDirection.loadPixels();
-
-    let xDpixels = xDirection.pixels.filter((v, i) => i % 4 == 0);
-    let yDpixels = yDirection.pixels.filter((v, i) => i % 4 == 0);
-
-
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-            let index = x + y * cols;
-
-
-            // y*scl*width + x*scl
-
-            // Edge detection
-            let xDirR = xDpixels[y * scl * width + x * scl] / 255 - 0.5;
-            let yDirR = yDpixels[y * scl * width + x * scl] / 255 - 0.5;
-
-            let angle = 90;
-            // let v = p5.Vector.fromAngle(angle);
-            //v.setMag(1);
-            if (xDirR < 0.005 && xDirR > -0.005 && yDirR < 0.005 && yDirR > -0.005) {
-                xDirR = 0;
-                yDirR = 0;
-            }
-            let v_edge = createVector(xDirR, yDirR);
-            edgeField[index] = v_edge;
-
-
-        }
-    }
-}
-
 function checkWithinWater(x, y) {
     return (waterMask.pixels[x + y * width] !== 0 && x < width && y < height);
 }
@@ -153,7 +116,6 @@ function setup() {
 
     normalMap.loadPixels();
 
-    constructEdgeField();
     drawEdgeField();
 
 
@@ -164,10 +126,10 @@ function setup() {
 // shows the Edge flowField if desired
 function drawEdgeField() {
 
-    edgeFieldBuffer = createGraphics(1500, 1000);
+    edgeFieldBuffer = createGraphics(width, height);
 
-    for (let y = 0; y < 1000; y=y+5) {
-        for (let x = 0; x < 1500; x=x+5) {
+    for (let y = 0; y < height; y=y+5) {
+        for (let x = 0; x < width; x=x+5) {
             edgeFieldBuffer.stroke("red");
             edgeFieldBuffer.push();
             edgeFieldBuffer.translate(x, y);

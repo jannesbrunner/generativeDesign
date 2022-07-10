@@ -3,7 +3,7 @@ class Ship {
         this.pos = createVector(posX, posY);
         this.vel = createVector(random(-1, 1), random(-1, 1));
         this.acc = createVector(0, 0);
-        this.maxspeed = 0.5;
+        this.maxspeed = 0.2;
         const nameIndex = random(0, availableBoatNames.length).toFixed(0);
         this.name = availableBoatNames[nameIndex];
         // remove the name from the array so it can't be used again
