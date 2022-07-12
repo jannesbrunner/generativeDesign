@@ -6,8 +6,11 @@ function guiSetup() {
     Toggle Gui:   <b>g</b><br/>
     `);
     settingsGui.addText("Log", "⏵︎");
-    settingsGui.addBoolean("Show Edge Flow Field", settings.showEdgeField, () => {
+    settingsGui.addBoolean("Show Flow Field", settings.showEdgeField, () => {
         settings.showEdgeField = !settings.showEdgeField;
+    });
+    settingsGui.addBoolean("Ships flee from mouse", settings.scaryMouse, () => {
+        settings.scaryMouse = !settings.scaryMouse;
     });
 
     gameGui = QuickSettings.create(20, 600, "Ship Information System");

@@ -10,11 +10,21 @@ class Ship {
         availableBoatNames.splice(nameIndex, 1);
     }
 
+    respectWaterBoundaries() {
+        let newPos = p5.Vector.add(this.pos, this.vel);
+        let isStillInWater = checkWithinWater(newPos.x, newPos.y);
+        //console.log(newPos.x, newPos.y);
+        return isStillInWater;
+    }
+
     update(ships) {
 
         this.acc.add(this.separation(ships));
+        if(settings.scaryMouse) { this.acc.add(this.scaryMouse()) }
         this.vel.add(this.acc);
-        this.pos.add(this.vel);
+        if(this.respectWaterBoundaries()) {
+            this.pos.add(this.vel);
+        }
         this.vel.limit(this.maxspeed);
         this.acc.mult(0);
     }
@@ -62,6 +72,18 @@ class Ship {
 
     }
 
+    scaryMouse() {
+        let perceptionRadius = 100;
+        let steering = createVector();
+        let d = dist(mouseX, mouseY, this.pos.x, this.pos.y)
+        if(d < perceptionRadius) {
+            let diff = p5.Vector.sub(this.pos, createVector(mouseX, mouseY));
+            diff.div(d);
+            steering.add(diff);
+        }
+        return steering;
+    }
+
     edges() {
         if (this.pos.x > width) {
             this.pos.x = 0;
@@ -83,9 +105,6 @@ class Ship {
             currentBoat = this;
             updateGameGui(currentBoat.name);
         }
-
-        
-
         translate(this.pos.x, this.pos.y);
         imageMode(CENTER)
         rotate(this.vel.heading());

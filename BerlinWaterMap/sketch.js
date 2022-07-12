@@ -18,6 +18,7 @@ let gameGui;
 const settings = {
     isPlaying: true,
     showEdgeField: false,
+    scaryMouse: false,
 }
 
 
@@ -83,6 +84,8 @@ function getDirectionForce(x, y) {
 }
 
 function checkWithinWater(x, y) {
+    x = Math.floor(x);
+    y = Math.floor(y);
     return (waterMask.pixels[x + y * width] !== 0 && x < width && y < height);
 }
 
