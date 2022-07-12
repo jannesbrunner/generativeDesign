@@ -9,28 +9,42 @@ class Police {
         this.name = "Police Boat";
         this.headBefore = createVector(0, 0);
         this.head = createVector(0, 0);
+        this.mass = 10;
     }
 
     accelerate(x, y) {
-        this.headBefore = this.head.copy();
+        this.headBefore = this.vel.copy();
         this.acc.add(x, y);
-        this.head = createVector(x, y);
+        this.head = this.vel.copy();
     }
 
     respectWaterBoundaries() {
         let newPos = p5.Vector.add(this.pos, this.vel);
         let isStillInWater = checkWithinWater(newPos.x, newPos.y);
+        if(!isStillInWater) {
+            this.vel.mult(0);
+            this.acc.mult(0);
+        }
         //console.log(newPos.x, newPos.y);
         return isStillInWater;
     }
 
-    update() {
+    update() { 
+
+     
+        //this.vel.mult(0);
+
+        //let resistance = p5.Vector.mult (this.vel.mult(this.vel).div(WATER_RESISTANCE).mult(-1)
+        let resistance = this.vel.copy();
+        resistance.mult(-1)
+        resistance.mult(WATER_RESISTANCE);
+
+        
+        this.vel.add(resistance);
         this.vel.add(this.acc);
-        this.vel.limit(this.maxspeed);
         if(this.respectWaterBoundaries()) {
             this.pos.add(this.vel);
         }
-        this.vel.mult(0);
         this.acc.mult(0);
     }
 
