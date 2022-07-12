@@ -8,4 +8,6 @@
 - [ ]Normalmap zeichnen
   - Edges sind schon, aber die flussrichtung nicht
 - [ ]Normal Map Brush bennen und exportieren
+- [ ] "Traktor Strahl" Vom Polizeiboot noch etwas unlogisch
+- [ ] Pelin Noise Feld auf Müggelsee legen
 - [ ]Präsentation vorbereiten
