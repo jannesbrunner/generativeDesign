@@ -20,9 +20,11 @@ class Ship {
     update(ships) {
 
         this.acc.add(this.separation(ships));
-        if(settings.scaryMouse) { this.acc.add(this.scaryMouse()) }
+        if (settings.scaryMouse) { this.acc.add(this.scaryMouse()) }
+        if (settings.followPolice) { this.acc.add(this.stickToPolice()) }
+        
         this.vel.add(this.acc);
-        if(this.respectWaterBoundaries()) {
+        if (this.respectWaterBoundaries()) {
             this.pos.add(this.vel);
         }
         this.vel.limit(this.maxspeed);
@@ -50,21 +52,21 @@ class Ship {
         let total = 0;
         // For each ship in the system, check if it's too close
         // Can be optimized maybe with QuadTree
-        for(let other of ships) {
+        for (let other of ships) {
             let d = dist(this.pos.x, this.pos.y, other.pos.x, other.pos.y)
-            if(other != this && d < perceptionRadius) {
+            if (other != this && d < perceptionRadius) {
                 let diff = p5.Vector.sub(this.pos, other.pos);
                 diff.normalize();
                 diff.mult(1 / d); // weight by distance
                 steering.add(diff);
                 total++;
             }
-           
+
         }
 
-        if(settings.hasPolice && police) {
+        if (settings.hasPolice && police) {
             let d = dist(this.pos.x, this.pos.y, police.pos.x, police.pos.y)
-            if(d < perceptionRadius) {
+            if (d < perceptionRadius) {
                 let diff = p5.Vector.sub(this.pos, police.pos);
                 diff.normalize();
                 diff.mult(1 / d); // weight by distance
@@ -72,42 +74,42 @@ class Ship {
                 total++;
             }
         }
-        if(total > 0) {
+        if (total > 0) {
             //steering.div(total);
             //steering.setMag(this.maxSpeed);
             //steering.sub(this.vel);
             //steering.limit(1)
         }
-        
-        return steering.mult(0.1);
 
+        return steering.mult(0.1);
+    }
+
+    stickToPolice() {
+        let perceptionRadius = 100;
+        let steering = createVector();
+
+        let d = dist(this.pos.x, this.pos.y, police.pos.x, police.pos.y)
+        if (d < perceptionRadius) {
+            steering.add(police.pos);
+            steering.sub(this.pos)
+            steering.setMag(this.maxSpeed);
+            steering.sub(this.vel);
+            steering.limit(1)
+
+        }
+        return steering;
     }
 
     scaryMouse() {
         let perceptionRadius = 100;
         let steering = createVector();
         let d = dist(mouseX, mouseY, this.pos.x, this.pos.y)
-        if(d < perceptionRadius) {
+        if (d < perceptionRadius) {
             let diff = p5.Vector.sub(this.pos, createVector(mouseX, mouseY));
             diff.div(d);
             steering.add(diff);
         }
         return steering;
-    }
-
-    edges() {
-        if (this.pos.x > width) {
-            this.pos.x = 0;
-        }
-        if (this.pos.x < 0) {
-            this.pos.x = width;
-        }
-        if (this.pos.y > height) {
-            this.pos.y = 0;
-        }
-        if (this.pos.y < 0) {
-            this.pos.y = height;
-        }
     }
 
     show() {
