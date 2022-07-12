@@ -7,6 +7,7 @@ let normalMap;
 // Ships
 let ships = [];
 let currentBoat = null;
+let police = null;
 let availableBoatNames;
 let currentBoatNames = [];
 
@@ -19,6 +20,7 @@ const settings = {
     isPlaying: true,
     showEdgeField: false,
     scaryMouse: false,
+    hasPolice: false
 }
 
 
@@ -27,6 +29,7 @@ function preload() {
     assets.boatNames = loadStrings("./assets/boatNames.txt");
     assets.yacht = loadImage('./assets/ships/yacht.png');
     assets.sailboat = loadImage('./assets/ships/sailboat.png');
+    assets.police = loadImage('./assets/ships/police.png');
     waterMask = loadImage("./assets/map_sw_trim.png",)
     normalMap = loadImage("./assets/normalmap.png",)
 }
@@ -56,10 +59,15 @@ function draw() {
         ships.forEach(particle => {
             particle.follow();
             particle.update(ships);
-            particle.edges();
             particle.show();
         });
     }
+    if(settings.hasPolice && police) {
+        controlPoliceBoat();
+        police.update(ships);
+        police.show();
+    }
+
     currentBoatInfo();
 }
 

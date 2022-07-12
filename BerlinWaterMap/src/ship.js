@@ -61,6 +61,17 @@ class Ship {
             }
            
         }
+
+        if(settings.hasPolice && police) {
+            let d = dist(this.pos.x, this.pos.y, police.pos.x, police.pos.y)
+            if(d < perceptionRadius) {
+                let diff = p5.Vector.sub(this.pos, police.pos);
+                diff.normalize();
+                diff.mult(1 / d); // weight by distance
+                steering.add(diff);
+                total++;
+            }
+        }
         if(total > 0) {
             //steering.div(total);
             //steering.setMag(this.maxSpeed);

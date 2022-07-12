@@ -6,6 +6,14 @@ function guiSetup() {
     Toggle Gui:   <b>g</b><br/>
     `);
     settingsGui.addText("Log", "⏵︎");
+    settingsGui.addBoolean("Police Boat", settings.hasPolice, (v) => {
+        settings.hasPolice = v;
+        if (settings.hasPolice) {
+            police = new Police();
+        } else {
+            police = null;
+        }
+    });
     settingsGui.addBoolean("Show Flow Field", settings.showEdgeField, () => {
         settings.showEdgeField = !settings.showEdgeField;
     });

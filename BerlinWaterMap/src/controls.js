@@ -12,3 +12,25 @@ function mouseClicked() { // Spawn Ships in water
         updateGameGui();
     }
 }
+
+function controlPoliceBoat() {
+    if (keyIsDown(87))  { //W
+        police.accelerate(0, -1);
+    } 
+ 
+     if (keyIsDown(65))  { //A
+         police.accelerate(-1, 0);
+     } 
+ 
+     if (keyIsDown(83))  { //S
+        police.accelerate(0, 1);
+     } 
+ 
+     if (keyIsDown(68))  { //D
+        police.accelerate(1, 0);
+     } 
+ 
+     if (keyIsDown(32)) { // SPACE
+       
+     }
+}
