@@ -20,7 +20,8 @@ const settings = {
     isPlaying: true,
     showEdgeField: false,
     scaryMouse: false,
-    hasPolice: false
+    hasPolice: false,
+    followPolice: false
 }
 
 

@@ -4,6 +4,11 @@ function keyReleased() {
         settings.isPlaying ? loop() : noLoop();
         settingsGui.setValue("Log", settings.isPlaying ? "⏵︎" : "⏸︎");
     }
+
+    if (key === "f") {
+            settings.followPolice = !settings.followPolice;
+            settingsGui.setValue("Log", settings.followPolice ? "Follow Police ✅" : "Follow Police ❌");
+    }
 }
 
 function mouseClicked() { // Spawn Ships in water
@@ -33,4 +38,6 @@ function controlPoliceBoat() {
      if (keyIsDown(32)) { // SPACE
        
      }
+     
+     
 }
