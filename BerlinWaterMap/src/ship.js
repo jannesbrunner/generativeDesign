@@ -75,7 +75,7 @@ class Ship {
 
     // Separate from other ships
     separation(ships) {
-        let perceptionRadius = 50;
+        let perceptionRadius = 100;
         let steering = createVector();
         let total = 0;
         // For each ship in the system, check if it's too close
@@ -114,10 +114,11 @@ class Ship {
 
     stickToPolice() {
         let perceptionRadius = 100;
-        let steering = createVector();
+        let steering = createVector(0, 0);
 
         let d = dist(this.pos.x, this.pos.y, police.pos.x, police.pos.y)
-        if (d < perceptionRadius) {
+        if (d < perceptionRadius && d > 40) {
+
             steering.add(police.pos);
             steering.sub(this.pos)
             steering.setMag(this.maxSpeed);
