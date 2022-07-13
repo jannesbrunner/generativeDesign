@@ -10,6 +10,7 @@ class Police {
         this.headBefore = createVector(0, 0);
         this.head = createVector(0, 0);
         this.mass = 10;
+        this.texture = assets.police;
     }
 
     accelerate(x, y) {
@@ -54,7 +55,7 @@ class Police {
         imageMode(CENTER)
         //rotate(this.head.heading() + 90);
         rotate(p5.Vector.lerp(this.headBefore , this.head , 0.5).heading() + 90);
-        image(assets.police, 0, 0, assets.police.width * 0.03, assets.police.height * 0.03);
+        image(this.texture, 0, 0, this.texture.width * 0.03, this.texture.height * 0.03);
         pop();
     }
      

@@ -1,5 +1,32 @@
+function newShip(posX, posY, type=undefined) {
+
+    const shipTypes = ["motorboat", "sailboat"];
+
+    if (type == undefined) {
+        type = Math.floor(Math.random() * shipTypes.length);
+        console.log(type);
+    }
+
+    switch (shipTypes[type]) {
+        case "motorboat":
+            return new Motorboat(posX, posY);
+        
+        case "sailboat":
+            return new Sailboat(posX, posY);
+    
+        default:
+            console.error(`Ship type ${type} not found`);
+            return;
+    }
+
+}
+
+
 class Ship {
     constructor(posX, posY) {
+        if(this.constructor == Ship){
+            throw new Error(" Object of Abstract Class Ship cannot be created");
+        }
         this.pos = createVector(posX, posY);
         this.vel = createVector(random(-1, 1), random(-1, 1));
         this.acc = createVector(0, 0);
@@ -8,6 +35,7 @@ class Ship {
         this.name = availableBoatNames[nameIndex];
         // remove the name from the array so it can't be used again
         availableBoatNames.splice(nameIndex, 1);
+        this.texture = null;
     }
 
     respectWaterBoundaries() {
@@ -121,7 +149,7 @@ class Ship {
         translate(this.pos.x, this.pos.y);
         imageMode(CENTER)
         rotate(this.vel.heading());
-        image(assets.yacht, 0, 0, assets.yacht.width * 0.03, assets.yacht.height * 0.03);
+        image(this.texture, 0, 0, this.texture.width * 0.03, this.texture.height * 0.03);
         pop();
 
         if (currentBoat === this) {
