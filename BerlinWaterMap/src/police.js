@@ -32,9 +32,7 @@ class Police {
 
     update() { 
 
-     
         //this.vel.mult(0);
-
         //let resistance = p5.Vector.mult (this.vel.mult(this.vel).div(WATER_RESISTANCE).mult(-1)
         let resistance = this.vel.copy();
         resistance.mult(-1)

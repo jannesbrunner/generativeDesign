@@ -2,21 +2,9 @@ class Sailboat extends Ship {
     constructor(posX, posY) {
         super(posX, posY);
         this.texture = assets.sailboat;
+        this.mass = 1;
     }
 
-    update(ships) {
-
-        this.acc.add(this.separation(ships));
-        if (settings.scaryMouse) { this.acc.add(this.scaryMouse()) }
-        if (settings.followPolice) { this.acc.add(this.stickToPolice()) }
-        
-        this.vel.add(this.acc);
-        if (this.respectWaterBoundaries()) {
-            this.pos.add(this.vel);
-        }
-        this.vel.limit(this.maxspeed);
-        this.acc.mult(0);
-    }
 
     applyForce(force) {
         this.acc.add(force);

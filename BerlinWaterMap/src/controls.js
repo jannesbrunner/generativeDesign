@@ -13,7 +13,7 @@ function keyReleased() {
 
 function mouseClicked() { // Spawn Ships in water
     if (mouseButton === LEFT && checkWithinWater(mouseX, mouseY) && availableBoatNames.length > 0) {
-        ships.push(newShip(mouseX, mouseY));
+        ships.push(newShip(mouseX, mouseY, currentShipType));
         updateGameGui();
     }
 }

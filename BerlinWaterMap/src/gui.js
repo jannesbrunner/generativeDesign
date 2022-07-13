@@ -4,8 +4,14 @@ function guiSetup() {
     settingsGui.addHTML("Info", `
     Play Pause:   <b>p</b><br/>
     Toggle Gui:   <b>g</b><br/>
+    Spawn Boat:   <b>Mouse Left</b><br/>
+    Delete Boat:  <b>Mouse Right</b><br/>
+    Select Boat:  <b>List or Mouse Hover</b><br/>
     `);
     settingsGui.addText("Log", "⏵︎");
+    settingsGui.addDropDown("Spawn Boat Type", shipTypes, ({ value }) => { 
+        currentShipType = value;
+    });
     settingsGui.addBoolean("Police Boat", settings.hasPolice, (v) => {
         settings.hasPolice = v;
         if (settings.hasPolice) {
@@ -14,6 +20,7 @@ function guiSetup() {
             police = null;
         }
     });
+    
     settingsGui.addBoolean("Show Flow Field", settings.showEdgeField, () => {
         settings.showEdgeField = !settings.showEdgeField;
     });
@@ -33,7 +40,7 @@ function currentBoatInfo() {
         Position X: ${currentBoat.pos.x.toFixed(0)} Y: ${currentBoat.pos.y.toFixed(0)}<br/>
         Course: ${currentBoat.vel.heading().toFixed(2)} °<br/>
         Speed: ${currentBoat.vel.mag().toFixed(2)}<br/>
-        Acceleration: ${currentBoat.acc.x.toFixed(2)}, ${currentBoat.acc.y.toFixed(2)}<br/>
+        Acceleration: ${currentBoatAccelerationGui}<br/>
         `);
     }
 }

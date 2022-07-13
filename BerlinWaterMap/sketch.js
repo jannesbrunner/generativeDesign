@@ -3,9 +3,12 @@
 let edgeFieldBuffer;
 let waterMask;
 let normalMap;
+let perlinNoiseMask;
 
 // Ships
 let ships = [];
+const shipTypes = ["random", "motorboat", "sailboat", "rescueBoat"];
+let currentShipType = "random";
 let currentBoat = null;
 let police = null;
 let availableBoatNames;
@@ -16,6 +19,8 @@ const assets = {}
 // settings
 let settingsGui;
 let gameGui;
+let currentBoatAccelerationLast = 0;
+let currentBoatAccelerationGui = "";
 const settings = {
     isPlaying: true,
     showEdgeField: false,
@@ -31,8 +36,10 @@ function preload() {
     assets.yacht = loadImage('./assets/ships/yacht.png');
     assets.sailboat = loadImage('./assets/ships/sailboat.png');
     assets.police = loadImage('./assets/ships/police.png');
+    assets.rescueBoat = loadImage('./assets/ships/rescueBoat.png');
     waterMask = loadImage("./assets/map_sw_trim.png",)
-    normalMap = loadImage("./assets/normalmap.png",)
+    normalMap = loadImage("./assets/normalmap_kanal.png",)
+    perlinNoiseMask = loadImage("./assets/map_pn_area.png",)
 }
 
 function setup() {
@@ -45,13 +52,17 @@ function setup() {
     waterMask.loadPixels();
     waterMask.pixels = waterMask.pixels.filter((_, i) => i % 4 == 0);
 
+    perlinNoiseMask.loadPixels();
+    perlinNoiseMask.pixels = perlinNoiseMask.pixels.filter((_, i) => i % 4 == 0);
+
     normalMap.loadPixels();
-    drawEdgeField();
+    //drawEdgeField();
 
 }
 
 function draw() {
     image(assets.waterMap, 0, 0, assets.waterMap.width, assets.waterMap.height);
+    currentBoatInfo();
     if (settings.showEdgeField) {
         image(edgeFieldBuffer, 0, 0);
     }
@@ -69,9 +80,13 @@ function draw() {
         police.show();
     }
 
-    currentBoatInfo();
 }
 
+function checkWithinLake(x, y) {
+    x = Math.floor(x);
+    y = Math.floor(y);
+    return (perlinNoiseMask.pixels[x + y * width] !== 0 && x < width && y < height);
+}
 
 
 function checkWithinWater(x, y) {

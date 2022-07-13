@@ -1,9 +1,10 @@
-class Motorboat extends Ship {
+class RescueBoat extends Ship {
     constructor(posX, posY) {
         super(posX, posY);
-        this.texture = assets.yacht;
-        this.maxspeed = 0.4;
-        this.mass = 1;
+        this.texture = assets.rescueBoat;
+        this.maxspeed = 0.1;
+        this.scaling = 0.09;
+        this.mass = 5;
     }
 
 

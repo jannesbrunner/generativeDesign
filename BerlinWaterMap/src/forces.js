@@ -1,5 +1,16 @@
 const WATER_RESISTANCE = 0.01;
 
+function getPerlinNoiseForce(x, y) {
+    let fac = 100
+    x = x / fac
+    y = y / fac
+    let z = frameCount / 400
+    let force_x = map(noise(x, y, z), 0, 1, -1, 1);
+    let force_y = map(noise(x + 100, y + 100, z), 0, 1, -1, 1);
+    return createVector(force_x, force_y);
+}
+    
+
 // flux of water determined by normal map
 function getDirectionForce(x, y) {
     // get the index of the current pixel in p5.Image 
