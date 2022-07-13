@@ -1,5 +1,5 @@
 function guiSetup() {
-    settingsGui = QuickSettings.create(width, 20, "Settings");
+    settingsGui = QuickSettings.create(519, 380, "Settings");
     settingsGui.setKey("g");
     settingsGui.addHTML("Info", `
     Play Pause:   <b>p</b><br/>
@@ -21,7 +21,7 @@ function guiSetup() {
         settings.scaryMouse = !settings.scaryMouse;
     });
 
-    gameGui = QuickSettings.create(20, 600, "Ship Information System");
+    gameGui = QuickSettings.create(750, 380, "Ship Information System");
     gameGui.addProgressBar("No of Ships", assets.boatNames.length, assets.boatNames.length - availableBoatNames.length, "");
 
 }
