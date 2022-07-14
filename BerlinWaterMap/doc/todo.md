@@ -5,9 +5,9 @@
 - [X]Ship assets
   - https://favpng.com/download/0Wdz9ii1
   - https://favpng.com/png_view/boat-top-boat-ship-fishing-vessel-yacht-png/ibwXNm7z
-- [ ]Normalmap zeichnen
+- [X]Normalmap zeichnen
   - Edges sind schon, aber die flussrichtung nicht
-- [ ]Normal Map Brush bennen und exportieren
+- [X]Normal Map Brush bennen und exportieren
 - [/] "Traktor Strahl" Vom Polizeiboot noch etwas unlogisch
-- [ ] Pelin Noise Feld auf Müggelsee legen
-- [ ]Präsentation vorbereiten
+- [X] Pelin Noise Feld auf Müggelsee legen
+- [/]Präsentation vorbereiten
