@@ -56,6 +56,9 @@ class Police {
         image(this.texture, 0, 0, this.texture.width * 0.03, this.texture.height * 0.03);
         pop();
     }
+
+    getAccAsString()  {
+        return `${this.acc.mag().toFixed(5)}`;    }
      
 
 }

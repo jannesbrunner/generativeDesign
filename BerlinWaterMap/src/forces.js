@@ -1,12 +1,11 @@
 const WATER_RESISTANCE = 0.01;
 
 function getPerlinNoiseForce(x, y) {
-    let fac = 100
-    x = x / fac
-    y = y / fac
-    let z = frameCount / 400
+    x = x / settings.perlinNoise.xyfac;
+    y = y / settings.perlinNoise.xyfac;
+    let z = frameCount / settings.perlinNoise.zfac;
     let force_x = map(noise(x, y, z), 0, 1, -1, 1);
-    let force_y = map(noise(x + 100, y + 100, z), 0, 1, -1, 1);
+    let force_y = map(noise(x + 1000, y + 1000, z), 0, 1, -1, 1);
     return createVector(force_x, force_y);
 }
     

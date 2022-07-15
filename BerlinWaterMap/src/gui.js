@@ -27,10 +27,26 @@ function guiSetup() {
     settingsGui.addBoolean("Ships flee from mouse", settings.scaryMouse, () => {
         settings.scaryMouse = !settings.scaryMouse;
     });
+    settingsGui.addRange("XYFac", 30, 800, settings.perlinNoise.xyfac, 1, (v) => {  settings.perlinNoise.xyfac = v; });
+    settingsGui.addRange("ZFac", 100, 1000, settings.perlinNoise.zfac, 1, (v) => {  settings.perlinNoise.zfac = v; });
 
     gameGui = QuickSettings.create(750, 380, "Ship Information System");
+    gameGui.addHTML("Police Boat", "No Police");
     gameGui.addProgressBar("No of Ships", assets.boatNames.length, assets.boatNames.length - availableBoatNames.length, "");
 
+}
+
+function policeBoatInfo() {
+    if (police) {
+        gameGui.setValue("Police Boat", `
+        Position X: ${police.pos.x.toFixed(0)} Y: ${police.pos.y.toFixed(0)}<br/>
+        Course: ${police.vel.heading().toFixed(2)} °<br/>
+        Speed: ${police.vel.mag().toFixed(2)}<br/>
+        Acceleration: ${police.acceleration}<br/>
+        `);
+    } else {
+        gameGui.setValue("Police Boat", "No Police");
+    }
 }
 
 function currentBoatInfo() {
@@ -40,7 +56,7 @@ function currentBoatInfo() {
         Position X: ${currentBoat.pos.x.toFixed(0)} Y: ${currentBoat.pos.y.toFixed(0)}<br/>
         Course: ${currentBoat.vel.heading().toFixed(2)} °<br/>
         Speed: ${currentBoat.vel.mag().toFixed(2)}<br/>
-        Acceleration: ${currentBoatAccelerationGui}<br/>
+        Acceleration: ${currentPoliceBoatAcceleration}<br/>
         `);
     }
 }

@@ -2,8 +2,8 @@ class Motorboat extends Ship {
     constructor(posX, posY) {
         super(posX, posY);
         this.texture = assets.yacht;
-        this.maxspeed = 0.4;
-        this.mass = 1;
+        this.maxspeed = 0.6;
+        this.mass = 0.8;
     }
 
 

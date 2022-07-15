@@ -49,7 +49,7 @@ class Ship {
         this.pos = createVector(posX, posY);
         this.vel = createVector(0, 0);
         this.acc = createVector(0, 0);
-        this.maxspeed = 0.2;
+        this.maxspeed = 0.5;
         const nameIndex = random(0, availableBoatNames.length).toFixed(0);
         this.name = availableBoatNames[nameIndex];
         // remove the name from the array so it can't be used again
@@ -80,10 +80,10 @@ class Ship {
         let velAngleBefore = this.vel.heading();
         this.vel.add(this.acc.div(this.mass));
         let velAngleAfter = this.vel.heading();
-        if (this.respectWaterBoundaries()) {
+        // if (this.respectWaterBoundaries()) {
 
             this.pos.add(this.vel);
-        }
+        // }
         
         this.vel.limit(this.maxspeed);
         if(currentBoat == this) {

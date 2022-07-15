@@ -11,12 +11,23 @@ function keyReleased() {
     }
 }
 
-function mouseClicked() { // Spawn Ships in water
-    if (mouseButton === LEFT && checkWithinWater(mouseX, mouseY) && availableBoatNames.length > 0) {
+
+function mouseReleased(e) {
+
+    if (e.button == 0 && checkWithinWater(mouseX, mouseY) && availableBoatNames.length > 0) {
         ships.push(newShip(mouseX, mouseY, currentShipType));
         updateGameGui();
     }
-}
+
+    if(e.button == 2) {// RIGHT
+        if (currentBoat) {
+            // find currentBoat in ships array and remove it
+            
+        }
+    }
+    // prevent default
+    return false;
+  }
 
 function controlPoliceBoat() {
     if (keyIsDown(87))  { //W

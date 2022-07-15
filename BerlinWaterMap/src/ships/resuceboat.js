@@ -2,9 +2,9 @@ class RescueBoat extends Ship {
     constructor(posX, posY) {
         super(posX, posY);
         this.texture = assets.rescueBoat;
-        this.maxspeed = 0.1;
-        this.scaling = 0.09;
-        this.mass = 5;
+        this.maxspeed = 0.3;
+        this.scaling = 0.05;
+        this.mass = 1.2;
     }
 
 
@@ -19,5 +19,17 @@ class RescueBoat extends Ship {
         force.mult(0.01);
         super.applyForce(force);
     }
+
+    driveRandom() {
+        let steering = createVector();
+        if(checkWithinLake(this.pos.x, this.pos.y)) {
+            steering.add(getPerlinNoiseForce(this.pos.x, this.pos.y));
+            steering.mult(0.01);
+            return steering
+        } return steering;
+    }
+
+
+
 }
 

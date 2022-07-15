@@ -11,3 +11,11 @@
 - [/] "Traktor Strahl" Vom Polizeiboot noch etwas unlogisch
 - [X] Pelin Noise Feld auf Müggelsee legen
 - [/]Präsentation vorbereiten
+
+
+14.07.2022
+- [ ] Max Speed nur in den Flüssen
+- [ ] Normal Map reparieren (Kuhle am Ende)
+- [ ] Polizei Boot Info Panel
+- [ ] Das Löschen von Booten ermöglichen
+- [ ] Unterschiedliche Physik pro Boot

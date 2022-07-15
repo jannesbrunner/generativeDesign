@@ -21,12 +21,17 @@ let settingsGui;
 let gameGui;
 let currentBoatAccelerationLast = 0;
 let currentBoatAccelerationGui = "";
+let currentPoliceBoatAcceleration = 0;
 const settings = {
     isPlaying: true,
     showEdgeField: false,
     scaryMouse: false,
     hasPolice: false,
-    followPolice: false
+    followPolice: false,
+    perlinNoise: {
+        xyfac: 100,
+        zfac: 400,
+    }
 }
 
 
@@ -63,6 +68,7 @@ function setup() {
 function draw() {
     image(assets.waterMap, 0, 0, assets.waterMap.width, assets.waterMap.height);
     currentBoatInfo();
+    policeBoatInfo();
     if (settings.showEdgeField) {
         image(edgeFieldBuffer, 0, 0);
     }
