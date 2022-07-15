@@ -19,11 +19,12 @@ const assets = {}
 // settings
 let settingsGui;
 let gameGui;
-let currentBoatAccelerationLast = 0;
+let policeAccelerationGui = "";
 let currentBoatAccelerationGui = "";
 let currentPoliceBoatAcceleration = 0;
 const settings = {
     isPlaying: true,
+    showLabels: true,
     showEdgeField: false,
     scaryMouse: false,
     hasPolice: false,
@@ -37,6 +38,7 @@ const settings = {
 
 function preload() {
     assets.waterMap = loadImage("./assets/map.png",)
+    assets.waterMapLabels = loadImage("./assets/map_labels.png",)
     assets.boatNames = loadStrings("./assets/boatNames.txt");
     assets.yacht = loadImage('./assets/ships/yacht.png');
     assets.sailboat = loadImage('./assets/ships/sailboat.png');
@@ -61,14 +63,18 @@ function setup() {
     perlinNoiseMask.pixels = perlinNoiseMask.pixels.filter((_, i) => i % 4 == 0);
 
     normalMap.loadPixels();
-    //drawEdgeField();
+    drawEdgeField();
 
 }
 
 function draw() {
     image(assets.waterMap, 0, 0, assets.waterMap.width, assets.waterMap.height);
-    currentBoatInfo();
-    policeBoatInfo();
+    if(settings.showLabels) { 
+        push();
+        image(assets.waterMapLabels, 0, 0, assets.waterMapLabels.width, assets.waterMapLabels.height); 
+        pop();
+    }
+    
     if (settings.showEdgeField) {
         image(edgeFieldBuffer, 0, 0);
     }
@@ -85,6 +91,8 @@ function draw() {
         police.update(ships);
         police.show();
     }
+    currentBoatInfo();
+    policeBoatInfo();
 
 }
 

@@ -20,10 +20,15 @@ function mouseReleased(e) {
     }
 
     if(e.button == 2) {// RIGHT
-        if (currentBoat) {
+        if (currentBoat != null) {
             // find currentBoat in ships array and remove it
-            
+            let index = ships.findIndex(s => s.name === currentBoat.name);
+            if (index > -1) {
+                ships.splice(index, 1);
+                availableBoatNames.push(currentBoat.name);
+            }
         }
+        updateGameGui();
     }
     // prevent default
     return false;

@@ -44,6 +44,7 @@ class Police {
         if(this.respectWaterBoundaries()) {
             this.pos.add(this.vel);
         }
+        policeAccelerationGui = this.getAccAsString();
         this.acc.mult(0);
     }
 

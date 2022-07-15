@@ -6,9 +6,11 @@ function guiSetup() {
     Toggle Gui:   <b>g</b><br/>
     Spawn Boat:   <b>Mouse Left</b><br/>
     Delete Boat:  <b>Mouse Right</b><br/>
-    Select Boat:  <b>List or Mouse Hover</b><br/>
+    Select Boat:  <b>Mouse Hover</b><br/>
+    Escort Boat:  <b>f (toggle)</b><br/>
     `);
     settingsGui.addText("Log", "⏵︎");
+    settingsGui.addBoolean("Show Labels", settings.showLabels, () => {  settings.showLabels = !settings.showLabels; });
     settingsGui.addDropDown("Spawn Boat Type", shipTypes, ({ value }) => { 
         currentShipType = value;
     });
@@ -27,6 +29,7 @@ function guiSetup() {
     settingsGui.addBoolean("Ships flee from mouse", settings.scaryMouse, () => {
         settings.scaryMouse = !settings.scaryMouse;
     });
+    settingsGui.addHTML("Perlin Noise Settings", `(Only applied in lakes)`);
     settingsGui.addRange("XYFac", 30, 800, settings.perlinNoise.xyfac, 1, (v) => {  settings.perlinNoise.xyfac = v; });
     settingsGui.addRange("ZFac", 100, 1000, settings.perlinNoise.zfac, 1, (v) => {  settings.perlinNoise.zfac = v; });
 
@@ -42,7 +45,7 @@ function policeBoatInfo() {
         Position X: ${police.pos.x.toFixed(0)} Y: ${police.pos.y.toFixed(0)}<br/>
         Course: ${police.vel.heading().toFixed(2)} °<br/>
         Speed: ${police.vel.mag().toFixed(2)}<br/>
-        Acceleration: ${police.acceleration}<br/>
+        Acceleration: ${policeAccelerationGui}<br/>
         `);
     } else {
         gameGui.setValue("Police Boat", "No Police");
@@ -58,7 +61,7 @@ function currentBoatInfo() {
         Speed: ${currentBoat.vel.mag().toFixed(2)}<br/>
         Acceleration: ${currentPoliceBoatAcceleration}<br/>
         `);
-    }
+    } 
 }
 
 // shows the Edge flowField if desired
@@ -90,7 +93,7 @@ function updateGameGui(selected = null) {
         })
     }
     // WORKAROUND
-    if (ships.length >= 1) {
+    if (ships.length >= 0) {
         gameGui.removeControl("Info");
         gameGui.removeControl("Selected Boat")
     }

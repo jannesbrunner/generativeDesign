@@ -14,8 +14,8 @@
 
 
 14.07.2022
-- [ ] Max Speed nur in den Flüssen
-- [ ] Normal Map reparieren (Kuhle am Ende)
-- [ ] Polizei Boot Info Panel
-- [ ] Das Löschen von Booten ermöglichen
+- [X] Max Speed nur in den Flüssen
+- [X] Normal Map reparieren (Kuhle am Ende)
+- [X] Polizei Boot Info Panel
+- [X] Das Löschen von Booten ermöglichen
 - [ ] Unterschiedliche Physik pro Boot
